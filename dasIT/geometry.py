@@ -32,3 +32,26 @@ def plane_wave(angle_deg=0.0, x0=0.0):
         return (z * np.cos(angle) + (x - x0) * np.sin(angle)) / c
 
     return tx
+
+
+def plane_waves(angles_deg, element_x=None):
+    """One transmit delay per angle, for Beamformer(tx=...) with several shots.
+    element_x given: every wave is timed from the element that fires first (the end of the array the wave leaves
+    from), as systems do that start their clock with the first pulse. Without it: timed from the array centre."""
+    def first_fired(angle):
+        if element_x is None or angle == 0:
+            return 0.0 if element_x is None else float(np.min(element_x))
+        return float(np.min(element_x)) if angle > 0 else float(np.max(element_x))
+
+    return [plane_wave(angle, first_fired(angle)) for angle in angles_deg]
+
+
+def depth_axis(n_samples, fs, c, t0=0.0):
+    """Depth [m] of every sample of a line that the scanner already beamformed, or of an image with one pixel per
+    sample: half the distance sound travels until the sample is taken. t0: time of sample 0 [s]."""
+    return (t0 + np.arange(n_samples) / fs) * c / 2
+
+
+def line_positions(element_x, n_lines):
+    """x [m] of n_lines scan lines spread evenly over the array, first and last line on the outer elements."""
+    return np.linspace(np.min(element_x), np.max(element_x), n_lines)

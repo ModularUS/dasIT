@@ -20,6 +20,10 @@ and only for the pixels inside the aperture. The two engines differ in what they
     engine "loop"     add them to the image element by element and forget them. A few megabytes, for large grids.
 
 Both engines use the same triplets and give the same image.
+
+Several transmits for one image (coherent compounding): pass a list as `tx`, one transmit delay per shot, and the
+data with a shot axis, [samples, channels, shots] or [samples, channels, shots, frames]. The image is the sum over
+the shots; with the matrix engine it is still one product.
 '''
 
 import numpy as np
@@ -46,7 +50,7 @@ class Beamformer():
         element_x      x of the receive elements [m], one per data channel (dasIT.geometry.linear_array)
         grid_x, grid_z pixel coordinates [m], any spacing
         fs, c          sampling rate [Hz], speed of sound [m/s]
-        tx             transmit delay tx(x, z, c) -> s (dasIT.geometry.plane_wave)
+        tx             transmit delay tx(x, z, c) -> s (dasIT.geometry.plane_wave), or a list of them, one per shot
         t0             time of sample 0 on the clock of tx [s]
         f_number       receive aperture: its width at depth z is z / f_number, at least one element spacing
         window         'box' or 'hann', the weight across the aperture
@@ -66,7 +70,9 @@ class Beamformer():
         self.window, self.interp, self.engine, self.normalise, self.dtype = window, interp, engine, normalise, dtype
         self.shape = (self.grid_z.size, self.grid_x.size)
 
-        self._tx = np.ascontiguousarray(np.broadcast_to(tx(self.grid_x[None, :], self.grid_z[:, None], self.c), self.shape))
+        shots = list(tx) if isinstance(tx, (list, tuple)) else [tx]
+        self.n_shots = len(shots)
+        self._tx = [np.ascontiguousarray(np.broadcast_to(t(self.grid_x[None, :], self.grid_z[:, None], self.c), self.shape)) for t in shots]
         if half_aperture is None:
             spacing = np.median(np.diff(self.element_x)) if self.element_x.size > 1 else 0.0
             half_aperture = np.maximum(self.grid_z / (2 * f_number), spacing / 2)
@@ -82,22 +88,22 @@ class Beamformer():
         """Weight of this element for every pixel, [depth, lateral]."""
         return WINDOWS[self.window](np.abs(self.grid_x[None, :] - self.element_x[element]) / self._half_aperture[:, None])
 
-    def delays(self, element):
+    def delays(self, element, shot=0):
         """Arrival sample (fractional) of the echo of every pixel on this element, [depth, lateral]."""
-        return self._arrival(element, self.grid_x[None, :], self.grid_z[:, None], self._tx)
+        return self._arrival(element, self.grid_x[None, :], self.grid_z[:, None], self._tx[shot])
 
     def weights(self, element):
         """Weight of this element for every pixel, [depth, lateral]. 0 outside the aperture."""
         return self._weight(element)
 
-    # ---- the triplets of one element: (pixel, sample, weight), only where the weight is not zero
-    def _taps(self, element, n_samples):
+    # ---- the triplets of one element and shot: (pixel, sample, weight), only where the weight is not zero
+    def _taps(self, element, n_samples, shot=0):
         """[(pixel, sample, weight)]: one entry for 'nearest', two for 'linear' (the samples before and after the
         arrival). pixel = depth index * lateral size + lateral index. Arrivals outside the record are left out."""
         weight = self._weight(element).ravel()
         pixel = np.flatnonzero(weight)                                   # the pixels that have this element in their aperture
         iz, ix = np.divmod(pixel, self.shape[1])
-        s = self._arrival(element, self.grid_x[ix], self.grid_z[iz], self._tx.ravel()[pixel])
+        s = self._arrival(element, self.grid_x[ix], self.grid_z[iz], self._tx[shot].ravel()[pixel])
         weight = weight[pixel]
         if self.interp == 'nearest':
             first = np.rint(s).astype(np.int64)
@@ -112,19 +118,21 @@ class Beamformer():
 
     # ---- engine "matrix"
     def matrix(self, n_samples):
-        """The beamformer as a sparse matrix [pixels, samples * channels] for records of n_samples. Built once."""
+        """The beamformer as a sparse matrix [pixels, samples * channels * shots] for records of n_samples. Built once.
+        The columns follow rf.reshape(-1): sample, then channel, then shot."""
         if n_samples not in self._matrices:
-            n_channels = self.element_x.size
+            n_channels, n_shots = self.element_x.size, self.n_shots
             n_parts = 1 if self.interp == 'nearest' else 2
-            room = n_parts * sum(np.count_nonzero(self._weight(e)) for e in range(n_channels))     # upper bound, no copies later
+            room = n_shots * n_parts * sum(np.count_nonzero(self._weight(e)) for e in range(n_channels))   # upper bound
             rows, cols, vals = np.empty(room, np.int32), np.empty(room, np.int32), np.empty(room, self.dtype)
             n = 0
-            for element in range(n_channels):
-                for pixel, sample, weight in self._taps(element, n_samples):
-                    rows[n:n + pixel.size], vals[n:n + pixel.size] = pixel, weight
-                    cols[n:n + pixel.size] = sample * n_channels + element
-                    n += pixel.size
-            m = sparse.csr_matrix((vals[:n], (rows[:n], cols[:n])), shape=(self.shape[0] * self.shape[1], n_samples * n_channels))
+            for shot in range(n_shots):
+                for element in range(n_channels):
+                    for pixel, sample, weight in self._taps(element, n_samples, shot):
+                        rows[n:n + pixel.size], vals[n:n + pixel.size] = pixel, weight
+                        cols[n:n + pixel.size] = (sample * n_channels + element) * n_shots + shot
+                        n += pixel.size
+            m = sparse.csr_matrix((vals[:n], (rows[:n], cols[:n])), shape=(self.shape[0] * self.shape[1], n_samples * n_channels * n_shots))
             if self.normalise:
                 total = np.asarray(m.sum(axis=1)).ravel()
                 scale = np.divide(1.0, total, out=np.zeros_like(total), where=total != 0)
@@ -134,24 +142,32 @@ class Beamformer():
 
     # ---- engine "loop"
     def _loop(self, rf):
+        """rf: [samples, channels, shots, frames]. Returns [pixels, frames]."""
         n_pixels = self.shape[0] * self.shape[1]
-        out = np.zeros((n_pixels,) + rf.shape[2:], dtype=np.result_type(rf.dtype, self.dtype))
+        out = np.zeros((n_pixels, rf.shape[3]), dtype=np.result_type(rf.dtype, self.dtype))
         total = np.zeros(n_pixels, dtype=self.dtype)
-        for element in range(self.element_x.size):
-            for pixel, sample, weight in self._taps(element, rf.shape[0]):          # a pixel occurs once per entry
-                out[pixel] += rf[sample, element] * (weight if rf.ndim == 2 else weight[:, None])
-                total[pixel] += weight
+        for shot in range(self.n_shots):
+            for element in range(self.element_x.size):
+                for pixel, sample, weight in self._taps(element, rf.shape[0], shot):      # a pixel occurs once per entry
+                    out[pixel] += rf[sample, element, shot] * weight[:, None]
+                    total[pixel] += weight
         if self.normalise:
-            scale = np.divide(1.0, total, out=np.zeros_like(total), where=total != 0)
-            out *= scale if rf.ndim == 2 else scale[:, None]
-        return out.reshape(self.shape + rf.shape[2:])
+            out *= np.divide(1.0, total, out=np.zeros_like(total), where=total != 0)[:, None]
+        return out
 
     def __call__(self, rf):
-        """Beamform rf [samples, channels] or [samples, channels, frames] -> [depth, lateral] or [depth, lateral, frames]."""
+        """Beamform. One transmit:  rf [samples, channels] or [samples, channels, frames].
+        Several transmits (tx given as a list): rf [samples, channels, shots] or [samples, channels, shots, frames].
+        Returns [depth, lateral], with a last frame axis when the input has one."""
         rf = np.asarray(rf)
-        if rf.ndim not in (2, 3) or rf.shape[1] != self.element_x.size:
-            raise ValueError(f"rf must be [samples, {self.element_x.size} channels] or [samples, channels, frames], got {rf.shape}")
+        has_shots = self.n_shots > 1 or rf.ndim == 4
+        has_frames = rf.ndim == (4 if has_shots else 3)
+        if rf.ndim not in ((3, 4) if has_shots else (2, 3)) or rf.shape[1] != self.element_x.size or (has_shots and rf.shape[2] != self.n_shots):
+            layout = "[samples, channels, shots(, frames)]" if has_shots else "[samples, channels(, frames)]"
+            raise ValueError(f"rf must be {layout} with {self.element_x.size} channels and {self.n_shots} shot(s), got {rf.shape}")
+        full = rf.reshape(rf.shape[0], rf.shape[1], self.n_shots, -1)            # [samples, channels, shots, frames]
         if self.engine == 'loop':
-            return self._loop(rf)
-        image = self.matrix(rf.shape[0]) @ rf.reshape(rf.shape[0] * rf.shape[1], -1)
-        return image.reshape(self.shape + rf.shape[2:])
+            image = self._loop(full)
+        else:
+            image = self.matrix(rf.shape[0]) @ full.reshape(-1, full.shape[3])
+        return image.reshape(self.shape + ((full.shape[3],) if has_frames else ()))
