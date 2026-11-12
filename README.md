@@ -18,4 +18,6 @@ pip install git+https://github.com/ModularUS/dasIT          # as a package
 pip install -e .[test]                                      # from a checkout, for development
 pytest                                                      # compares every processing stage with the golden model
 ```
-The tests run the chain of `beamform_image.ipynb` on the bundled example data and compare each stage with the reference results in `tests/golden/` (see `tests/golden/README.md`).
+The tests run the chain of `beamform_image.ipynb` on the bundled example data and compare each stage with the reference results in `tests/golden/` (see `tests/golden/README.md`). They also execute the code cells of the notebook itself.
+
+Tested with Python 3.10, NumPy 1.23, SciPy 1.10, pandas 1.5 (the versions dasIT 1.0 was written for) and with Python 3.12, NumPy 2.5, SciPy 1.18, pandas 3.1.
