@@ -31,6 +31,23 @@ bf.delays(element=96)         # arrival sample of every pixel on one element, bf
 | 128 elements, 780 x 128 pixels | 1.0 s | 0.04 s | 75 MB | 0.6 s | 6 MB |
 | 128 elements, 780 x 509 pixels | 4.1 s | 0.17 s | 301 MB | 2.7 s | 23 MB |
 
+Three ways to use it:
+```python
+# 1. one plane wave: rf [samples, channels]
+image = Beamformer(x, grid_x, grid_z, fs, c, tx=plane_wave(0))(rf)
+
+# 2. several steered plane waves, compounded coherently: rf [samples, channels, shots]
+from dasIT.geometry import plane_waves
+image = Beamformer(x, grid_x, grid_z, fs, c, tx=plane_waves([-12, 0, 12], x))(rf)
+
+# 3. lines the scanner already beamformed: no Beamformer, only envelope, log compression and the axes
+from dasIT.geometry import depth_axis, line_positions
+from dasIT.signal import analytic, envelope, log_compress
+from dasIT.plot import show_image
+show_image(log_compress(envelope(analytic(lines)), 50), line_positions(x, lines.shape[1]), depth_axis(lines.shape[0], fs, c))
+```
+Channel data that were recorded one receive element per shot with the same plane wave (as the Ultrasonix `planewave_channels` sequence does) are case 1: the shots together form one `[samples, channels]` record.
+
 # Install and test
 ```
 pip install git+https://github.com/ModularUS/dasIT          # as a package
