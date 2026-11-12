@@ -45,6 +45,17 @@ class RFDataloader():
 
         return frames
 
+def load_rf(path, dtype=np.float64):
+    """RF of an h5 file with the datasets frameNNNN/shotNNNN, each [samples, channels].
+    Returns [samples, channels, shots, frames]: shots (the transmits of one image) and frames keep their own axis.
+    (RFDataloader above puts them into one axis, which is only correct for one shot per frame.)"""
+    with h5py.File(path, 'r') as file:
+        frames = sorted(file.keys())
+        shots = sorted(file[frames[0]].keys())
+        data = np.stack([np.stack([file[f'{f}/{s}'][:] for s in shots], axis=-1) for f in frames], axis=-1)
+    return data.astype(dtype)
+
+
 class TDloader():
     def __init__(self, transducer_path=None):
         self.transducer = pd.read_csv(transducer_path)
