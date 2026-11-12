@@ -1,5 +1,5 @@
-# Datacontainer
-data/
+# Datacontainer (the folder at the repository root only, not the package dasIT/data)
+/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

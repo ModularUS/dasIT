@@ -80,8 +80,8 @@ def plot_signal_grid(signals=None,
         # print(f"Axial clip: [{axial_clip[0]},{axial_clip[1]}]")
 
         # clip
-        axis_vectors_xz[1] = axis_vectors_xz[1][axial_clip[0]:-axial_clip[1]]
-        signals = signals[axial_clip[0]:-axial_clip[1], :]
+        axis_vectors_xz[1] = axis_vectors_xz[1][axial_clip[0]:axis_vectors_xz[1].size - axial_clip[1]]   # a clip of 0 rows keeps the rows
+        signals = signals[axial_clip[0]:signals.shape[0] - axial_clip[1], :]
 
 
     if compression:
