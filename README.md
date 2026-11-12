@@ -11,3 +11,51 @@ dasIT is a delay-and-sum beamformer for planewave ultrasound implemented in Pyth
 # License
 This program is free software and licensed under the Apache License v2.0 - see the [LICENSE](https://github.com/ModularUS/dasIT/blob/main/LICENSE) file for details.
 
+
+# Beamforming from explicit inputs
+`dasIT.beamform.Beamformer` is a delay-and-sum core that takes everything it needs as arguments in SI units. The tutorial notebook `beamform_image.ipynb` is built on it and on `dasIT.geometry`, `dasIT.signal` and `dasIT.plot`.
+
+The classes of dasIT 1.0 (`dasIT.src`, `dasIT.features`, `dasIT.visualization`) are legacy. They are kept unchanged so that existing scripts keep running and are no longer used by the notebook. `tests/golden/LINEAGE.md` lists what the new chain corrects, one change at a time.
+```python
+from dasIT.geometry import linear_array, plane_wave
+from dasIT.beamform import Beamformer
+
+bf = Beamformer(element_x=linear_array(192, 0.23e-3), grid_x=x, grid_z=z, fs=20.8332e6, c=1540,
+                tx=plane_wave(angle_deg=0), t0=0.0, f_number=1.5, window='hann', interp='linear', engine='matrix')
+image = bf(rf)                # rf: [samples, channels] or [samples, channels, frames], real or analytic
+bf.delays(element=96)         # arrival sample of every pixel on one element, bf.weights(element=96) its weights
+```
+`engine='matrix'` keeps the whole beamformer as one sparse matrix (fast, many frames in one product), `engine='loop'` adds element after element (a few megabytes). Both give the same image. Measured with `python tests/benchmark.py` (Hann window, linear interpolation, double precision, one frame):
+
+| case | matrix: build | matrix: apply | matrix size | loop: apply | loop: peak memory |
+|---|---|---|---|---|---|
+| 192 elements, 708 x 192 pixels | 1.4 s | 0.07 s | 117 MB | 1.2 s | 7 MB |
+| 128 elements, 780 x 128 pixels | 1.0 s | 0.04 s | 75 MB | 0.6 s | 6 MB |
+| 128 elements, 780 x 509 pixels | 4.1 s | 0.17 s | 301 MB | 2.7 s | 23 MB |
+
+Three ways to use it:
+```python
+# 1. one plane wave: rf [samples, channels]
+image = Beamformer(x, grid_x, grid_z, fs, c, tx=plane_wave(0))(rf)
+
+# 2. several steered plane waves, compounded coherently: rf [samples, channels, shots]
+from dasIT.geometry import plane_waves
+image = Beamformer(x, grid_x, grid_z, fs, c, tx=plane_waves([-12, 0, 12], x))(rf)
+
+# 3. lines the scanner already beamformed: no Beamformer, only envelope, log compression and the axes
+from dasIT.geometry import depth_axis, line_positions
+from dasIT.signal import analytic, envelope, log_compress
+from dasIT.plot import show_image
+show_image(log_compress(envelope(analytic(lines)), 50), line_positions(x, lines.shape[1]), depth_axis(lines.shape[0], fs, c))
+```
+Channel data that were recorded one receive element per shot with the same plane wave (as the Ultrasonix `planewave_channels` sequence does) are case 1: the shots together form one `[samples, channels]` record.
+
+# Install and test
+```
+pip install git+https://github.com/ModularUS/dasIT          # as a package
+pip install -e .[test]                                      # from a checkout, for development
+pytest                                                      # compares every processing stage with the golden model
+```
+The tests compare the legacy chain on the bundled example data with the reference results in `tests/golden/` (see `tests/golden/README.md`), check the new core against synthetic point targets and the phantom, and execute the code cells of `beamform_image.ipynb`, which have to arrive at the newest golden frame.
+
+Tested with Python 3.10, NumPy 1.23, SciPy 1.10, pandas 1.5 (the versions dasIT 1.0 was written for) and with Python 3.12, NumPy 2.5, SciPy 1.18, pandas 3.1.

@@ -38,6 +38,7 @@ class medium():
                  max_depth_wavelength=60,
                  lateral_transducer_element_spacing=None,
                  axial_extrapolation_coef=1,
+                 grid_granularity=2,
                  attenuation_coefficient=None,
                  attenuation_power=None):
 
@@ -53,6 +54,7 @@ class medium():
 
         self._lateral_grid_spacing = lateral_transducer_element_spacing
         self._axial_extrapolation_coefficient = axial_extrapolation_coef
+        self._grid_granularity_factor = grid_granularity
         self._imaging_medium = self.__imaging_medium()
 
         self._attenuation_coefficient = attenuation_coefficient
@@ -82,10 +84,21 @@ class medium():
         # equally shared among all sampling points
         axial_grid_points_m = np.linspace(0,
                                           self._wavelength_m * self._recorded_penetration_depth,
-                                          round(self._rx_echo_samples / 2),
+                                          round(self._rx_echo_samples / self._grid_granularity_factor),
                                           endpoint=False)
         imaging_medium_grid = np.meshgrid(lateral_grid_points_m, axial_grid_points_m, sparse=True)
         return imaging_medium_grid
+    
+    # This is to update the imaging medium after fitting the beamformed signal to the original phantom grid.
+    def update_imaging_medium_axially(self, axial_distance, axial_len):
+        lateral_grid_points_m = self._lateral_grid_spacing
+        axial_grid_points_m = np.linspace(0,
+                                          axial_distance,
+                                          axial_len,
+                                          endpoint=False)
+        imaging_medium_grid = np.meshgrid(lateral_grid_points_m, axial_grid_points_m, sparse=True)
+        self._imaging_medium = imaging_medium_grid
+
 
     @property
     def speed_of_sound(self):
@@ -110,4 +123,12 @@ class medium():
     @property
     def alpha_power(self):
         return self._attenuation_power
+    
+    @property
+    def sampling_frequency(self):
+        return self._sampling_frequency
+    
+    @property
+    def speed_of_sound(self):
+        return self._speed_of_sound
 

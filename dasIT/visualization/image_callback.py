@@ -23,7 +23,7 @@ Author: Christoph Leitner, Date: Aug. 2022
 import os
 import numpy as np
 from matplotlib import pyplot as plt
-from dasIT.features.signal import logcompression, envelope
+from ..features.signal import logcompression, envelope
 
 
 def plot_signal_image(signal, compression=True, dbrange=1, path=None):
@@ -32,7 +32,10 @@ def plot_signal_image(signal, compression=True, dbrange=1, path=None):
 
     fig = plt.figure(figsize=(6, 7), dpi=300)
     ax_1 = fig.add_subplot(111)
-    ax_1.imshow(signal[90:-700, :],
+    # ax_1.imshow(signal[90:-700, :],
+    #             aspect=1,
+    #             cmap='gray')
+    ax_1.imshow(signal,
                 aspect=1,
                 cmap='gray')
 
@@ -47,7 +50,7 @@ def plot_signal_image(signal, compression=True, dbrange=1, path=None):
     plt.show()
 
     if path:
-        fig.savefig(os.path.join(path, 'plot1.png'), dpi=300)
+        fig.savefig(path, dpi=300)
 
 
 def plot_signal_grid(signals=None,
@@ -55,13 +58,14 @@ def plot_signal_grid(signals=None,
                      axial_clip=None,
                      compression=True,
                      dbrange=50,
-                     path=None):
+                     path=None,
+                     pad=False):
 
     m2mm_conversion = 1000
 
     if axial_clip:
         # convert to mm
-        axial_clip = np.array(axial_clip, dtype=np.float)
+        axial_clip = np.array(axial_clip, dtype=np.float64)
         axial_clip[np.isnan(axial_clip)] = 0
         axial_clip *= m2mm_conversion
 
@@ -71,11 +75,13 @@ def plot_signal_grid(signals=None,
             cutoff_pzt[1] = cutoff_pzt[0] * 1.5
 
         # calculate the number of samples to clip off
-        axial_clip = np.ceil(cutoff_pzt * axis_vectors_xz[1].size).astype(np.int)
+        axial_clip = np.ceil(cutoff_pzt * axis_vectors_xz[1].size).astype(np.int32)
+
+        # print(f"Axial clip: [{axial_clip[0]},{axial_clip[1]}]")
 
         # clip
-        axis_vectors_xz[1] = axis_vectors_xz[1][axial_clip[0]:-axial_clip[1]]
-        signals = signals[axial_clip[0]:-axial_clip[1], :]
+        axis_vectors_xz[1] = axis_vectors_xz[1][axial_clip[0]:axis_vectors_xz[1].size - axial_clip[1]]   # a clip of 0 rows keeps the rows
+        signals = signals[axial_clip[0]:signals.shape[0] - axial_clip[1], :]
 
 
     if compression:
@@ -83,31 +89,38 @@ def plot_signal_grid(signals=None,
     else:
         signal = signals
 
-    # fig = plt.figure(figsize=(6, 7), dpi=300)
-    fig = plt.figure(figsize=(5, 6), dpi=250)
-    ax_1 = fig.add_subplot(111)
-    ax_1.imshow(np.flipud(signal),
-                aspect=1,
-                interpolation='none',
-                extent=extents(axis_vectors_xz[0]) + extents(axis_vectors_xz[1]),
-                origin='upper',
-                cmap='gray')
-
-    ax_1.invert_yaxis()
-
-    ax_1.set_xlabel('Lateral [mm]', fontsize=15, fontweight='bold', labelpad=10)
-    ax_1.set_ylabel('Axial [mm]', fontsize=15, fontweight='bold', labelpad=10)
-    ax_1.xaxis.tick_top()
-    ax_1.xaxis.set_label_position('top')
-    ax_1.minorticks_on()
-
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=12)
-    plt.tight_layout()
-    plt.show()
-
+    if pad:
+        signal = np.pad(signal, 
+                        ((axial_clip[0], axial_clip[1]), (0,0)),
+                        mode='constant', 
+                        constant_values=0)
+        
     if path:
-        fig.savefig(os.path.join(path, 'plot2.png'), dpi=300)
+        # fig = plt.figure(figsize=(6, 7), dpi=300)
+        fig = plt.figure(figsize=(5, 6), dpi=250)
+        ax_1 = fig.add_subplot(111)
+        ax_1.imshow(np.flipud(signal),
+                    aspect=1,
+                    interpolation='none',
+                    extent=extents(axis_vectors_xz[0]) + extents(axis_vectors_xz[1]),
+                    origin='upper',
+                    cmap='gray')
+
+        ax_1.invert_yaxis()
+
+        ax_1.set_xlabel('Lateral [mm]', fontsize=15, fontweight='bold', labelpad=10)
+        ax_1.set_ylabel('Axial [mm]', fontsize=15, fontweight='bold', labelpad=10)
+        ax_1.xaxis.tick_top()
+        ax_1.xaxis.set_label_position('top')
+        ax_1.minorticks_on()
+
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
+        plt.tight_layout()
+        plt.show()
+        if path:
+            fig.savefig(path, dpi=300)
+    return signal
 
 def extents(f):
     delta = f[1] - f[0]

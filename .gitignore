@@ -1,3 +1,6 @@
+# Datacontainer (the folder at the repository root only, not the package dasIT/data)
+/data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -127,3 +130,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE
+.idea/

@@ -52,7 +52,9 @@ class RFfilter():
                           pass_zero=False,
                           scale=False,
                           fs=self._fsampling)
-        filCoeff = np.broadcast_to(filCoeff[:, np.newaxis], (self._forder, 1)) # Broadcast Filter it in Original Data Shape
+        # Shape the coefficients like the data, filter axis first: (order, 1) for [samples, channels],
+        # (order, 1, 1) for [samples, channels, frames]
+        filCoeff = filCoeff.reshape((self._forder,) + (1,) * (np.ndim(self._signals) - 1))
         return filCoeff
 
     @property
