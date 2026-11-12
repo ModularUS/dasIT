@@ -48,7 +48,7 @@ class apodization():
         elif self._apodization_type == 'rec':
             self._window = 'rec'
         else:
-            print(r'ERROR MESSAGE: Selected aodization type does not exist. Choose either \textit{rec} or \textit{blackman}.')
+            raise ValueError(f"Unknown apodization '{apo}'. Choose 'rec', 'hanning' or 'blackman'.")
         self._apo_table = self.__apodization()
 
 
@@ -91,7 +91,7 @@ class apodization():
         # Build Kernel
         for row_idx,(apo_datarow, directive_datarow, win) in enumerate(zip(apo_kernel, directive_aperture, window)):
             # Pad the active aperture (directivity) by setting the active element weights
-            padding_start_element = int((len(apo_datarow) / 2) - (directive_datarow / 2))
+            padding_start_element = int((len(apo_datarow) / 2) - (directive_datarow.item() / 2))
             apo_kernel[row_idx, padding_start_element:(padding_start_element+len(win))] = win
 
         # Initialize the size of the apodization masks and pad to fit the kernel on the array boundaries
@@ -116,7 +116,6 @@ class apodization():
 
 
     def __create_window(self, sort=None):
-        print()
         if self._window == 'hanning':
             window = [np.hanning(w) for w in np.squeeze(sort)]
         elif self._window == 'blackman':

@@ -40,12 +40,12 @@ class transducer():
                  axial_cutoff_wavelength=5,
                  speed_of_sound_ms=None):
 
-        self._f_center = float(center_frequency_hz)
+        self._f_center = float(np.squeeze(center_frequency_hz))     # a number, or a 1-element array as read from transducer.csv
         self._bandwidth = bandwidth_hz
         self._samples_per_wavelength = adc_ratio
         self._f_sampling = self._samples_per_wavelength * self._f_center
-        self._transducer_elements = int(transducer_elements_nr)
-        self._element_pitch = float(element_pitch_m)
+        self._transducer_elements = int(np.squeeze(transducer_elements_nr))
+        self._element_pitch = float(np.squeeze(element_pitch_m))
         self._lateral_transducer_spacing = self.lateral_spacing()
         self._pw_active_aperture = self._element_pitch * self._transducer_elements
         self._focus_number = focus_number
@@ -61,7 +61,7 @@ class transducer():
         elif (pinmap is not None) and pinmapbase == 0:
             self._pinmap = pinmap
         else:
-            self._pinmap = np.linspace[1, self._transducer_elements, 1]
+            self._pinmap = np.arange(self._transducer_elements)   # channels already in element order
 
         self._speed_of_sound = speed_of_sound_ms
         self._wavelength = self.wavelength_m()
