@@ -5,6 +5,10 @@
     vertical group      wires every 20 mm in depth: the two at nominal 20 and 40 mm are in the image
     grey-scale target   a hyperechoic cylinder of 8 mm diameter at 40 mm depth
 
+A wire is a peak along x. Before it is located, the median of every row over 8 mm is taken off: that removes what
+all columns of a row share, above all the echo of the probe surface, which is in the image as soon as the first
+samples of the record are kept (v11) and is 20 times brighter than the shallowest wire next to it.
+
 measure() returns numbers that have a nominal value (scales, offsets), or a direction that is better (widths,
 contrast). They are tracked per golden generation in tests/golden/LINEAGE.md.
 """
@@ -30,11 +34,12 @@ def _width(profile, step):
     return (hi - lo) * step
 
 
-def _wire(env, x, z, guess, half=(1.6, 0.9)):
+def _wire(env, x, z, guess, half=(1.6, 0.9), band=4.0):
     """Position (centroid of the upper half of the peak) and widths of the wire near `guess`, all in mm."""
     ix = np.flatnonzero(np.abs(x - guess[0]) <= half[0])
     iz = np.flatnonzero(np.abs(z - guess[1]) <= half[1])
-    patch = env[np.ix_(iz, ix)]
+    floor = np.median(env[np.ix_(iz, np.flatnonzero(np.abs(x - guess[0]) <= band))], axis=1)[:, None]
+    patch = np.clip(env[np.ix_(iz, ix)] - floor, 0, None)
     kz, kx = np.unravel_index(patch.argmax(), patch.shape)
     w = patch ** 2 * (patch > 0.5 * patch.max())
     cx = (w.sum(axis=0) * x[ix]).sum() / w.sum()
@@ -42,11 +47,13 @@ def _wire(env, x, z, guess, half=(1.6, 0.9)):
     return cx, cz, _width(patch[kz], x[1] - x[0]), _width(patch[:, kx], z[1] - z[0])
 
 
-def measure(env, grid_x, grid_z):
-    """env: envelope [depth, lateral]; grid_x, grid_z: pixel coordinates [m]. Returns a dict of the phantom metrics."""
+def measure(env, grid_x, grid_z, depth_shift_mm=0.0):
+    """env: envelope [depth, lateral]; grid_x, grid_z: pixel coordinates [m]. Returns a dict of the phantom metrics.
+    depth_shift_mm: how much deeper the whole image is drawn than in v1 (a later time zero); moves where the wires
+    are looked for, not what is measured."""
     x, z = 1e3 * np.asarray(grid_x, float), 1e3 * np.asarray(grid_z, float)
-    near = np.array([_wire(env, x, z, g) for g in NEAR_WIRES_MM])
-    deep = np.array([_wire(env, x, z, g) for g in DEPTH_WIRES_MM])
+    near = np.array([_wire(env, x, z, (gx, gz + depth_shift_mm)) for gx, gz in NEAR_WIRES_MM])
+    deep = np.array([_wire(env, x, z, (gx, gz + depth_shift_mm)) for gx, gz in DEPTH_WIRES_MM])
     lateral_spacing = np.polyfit(np.arange(6), near[:, 0], 1)[0]
     depth_step, depth_offset = np.polyfit(np.arange(1, 7), near[:, 1], 1)
 

@@ -12,22 +12,31 @@ lateral scale 0 %, depth scale 0 %, depth offset 0 mm, speckle 1.91.
 
 | gen | change | lateral scale | depth scale | depth offset | wire width at 20 mm (lat x ax) | cylinder contrast | speckle | change vs parent (mean) |
 |---|---|---|---|---|---|---|---|---|
-| v1 | dasIT 1.0 / usdatarecycler as frozen in tests/golden/usdatarecycler | +0.53 % | -4.49 % | +0.75 mm | 0.96 x 0.41 mm | 10.9 dB | 1.89 |  |
-| v2 | a delay beyond the record adds nothing; path lengths in double precision | +0.53 % | -4.49 % | +0.75 mm | 0.96 x 0.41 mm | 10.9 dB | 1.89 | 0.0293 % |
-| v3 | the full record of 4096 samples instead of the crop to 1416 | +0.53 % | -4.49 % | +0.75 mm | 0.96 x 0.41 mm | 10.9 dB | 1.89 | 0.0411 % |
-| v4 | element positions one pitch apart (were stretched by 192/191) | +0.01 % | -4.49 % | +0.75 mm | 0.95 x 0.42 mm | 11.0 dB | 1.88 | 14 % |
-| v5 | aperture z / 1.5 with a Hann window that uses every element inside it | +0.04 % | -4.45 % | +0.77 mm | 1.09 x 0.41 mm | 10.9 dB | 1.88 | 13.7 % |
-| v6 | linear interpolation between samples, after 4x oversampling of the record | +0.13 % | -4.44 % | +0.78 mm | 1.09 x 0.41 mm | 11.4 dB | 1.91 | 30.8 % |
-| v7 | every pixel divided by the sum of its weights | -0.05 % | -4.43 % | +0.74 mm | 1.09 x 0.41 mm | 10.8 dB | 1.87 | 96.9 % |
-| v8 | a real band-pass filter (Butterworth, zero phase) instead of the 10-tap filter that passed DC | -0.04 % | -4.43 % | +0.73 mm | 1.09 x 0.44 mm | 10.8 dB | 1.87 | 183 % |
-| v9 | no gain curve applied (v1.0 multiplied by the raw TGC control values) | -0.04 % | -4.42 % | +0.72 mm | 1.09 x 0.44 mm | 10.6 dB | 1.83 | 99.8 % |
-| v10 | three lateral pixels per element, beamformed (not interpolated afterwards) | -0.04 % | -4.44 % | +0.72 mm | 1.08 x 0.43 mm | 10.4 dB | 1.83 | other grid |
+| v1 | dasIT 1.0 / usdatarecycler as frozen in tests/golden/usdatarecycler | +0.55 % | -4.47 % | +0.73 mm | 0.93 x 0.40 mm | 10.9 dB | 1.89 |  |
+| v2 | a delay beyond the record adds nothing; path lengths in double precision | +0.55 % | -4.47 % | +0.73 mm | 0.93 x 0.40 mm | 10.9 dB | 1.89 | 0.0293 % |
+| v3 | the full record of 4096 samples instead of the crop to 1416 | +0.55 % | -4.47 % | +0.73 mm | 0.93 x 0.40 mm | 10.9 dB | 1.89 | 0.0411 % |
+| v4 | element positions one pitch apart (were stretched by 192/191) | +0.02 % | -4.42 % | +0.73 mm | 0.92 x 0.40 mm | 11.0 dB | 1.88 | 14 % |
+| v5 | aperture z / 1.5 with a Hann window that uses every element inside it | +0.01 % | -4.45 % | +0.74 mm | 1.05 x 0.40 mm | 10.9 dB | 1.88 | 13.7 % |
+| v6 | linear interpolation between samples, after 4x oversampling of the record | +0.01 % | -4.44 % | +0.74 mm | 1.06 x 0.40 mm | 11.4 dB | 1.91 | 30.8 % |
+| v7 | every pixel divided by the sum of its weights | -0.01 % | -4.45 % | +0.73 mm | 1.06 x 0.40 mm | 10.8 dB | 1.87 | 96.9 % |
+| v8 | a real band-pass filter (Butterworth, zero phase) instead of the 10-tap filter that passed DC | +0.03 % | -4.47 % | +0.71 mm | 1.06 x 0.42 mm | 10.8 dB | 1.87 | 183 % |
+| v9 | no gain curve applied (v1.0 multiplied by the raw TGC control values) | +0.02 % | -4.47 % | +0.71 mm | 1.06 x 0.42 mm | 10.6 dB | 1.83 | 99.8 % |
+| v10 | three lateral pixels per element, beamformed (not interpolated afterwards) | -0.03 % | -4.50 % | +0.71 mm | 1.05 x 0.42 mm | 10.4 dB | 1.83 | other grid |
+| v11 | the first 40 samples kept (v1.0 set them to zero; the record starts at 5 wavelengths depth, they are echoes) | -0.03 % | -4.50 % | +0.69 mm | 1.05 x 0.42 mm | 10.4 dB | 1.83 | 68.6 % |
+| v12 | time of sample 0 from the acquisition settings: start depth minus lens, +0.62 us | +0.02 % | -4.46 % | +1.17 mm | 1.01 x 0.41 mm | 10.5 dB | 1.83 | 153 % |
 
 ## Open items
 
-- **Depth scale -4.4 % and depth offset +0.7 mm in every generation.** They do not come from the beamformer (v1 and
-  v10 agree). They belong to the description of the recording: sampling rate, speed of sound, time of the first
-  sample, lens. The example file carries no acquisition metadata. Not corrected until the acquisition settings are known.
+- **Depth scale -4.4 % in every generation.** It does not come from the beamformer (v1 and v10 agree) and not from
+  the time of the first sample (an offset, corrected in v12). The Verasonics setup of the recording confirms the
+  sampling rate (NS200BW at 5.2083 MHz) and 1540 m/s. Still unexplained.
+- **Depth offset.** Since v12 the time of sample 0 follows the acquisition settings. The near-field wires then sit
+  about 1.2 mm deeper than their nominal depth below the phantom surface. A layer of coupling gel between probe and
+  phantom would do that; it was not measured.
+- **The image was designed for 28 mm depth** (P.endDepth = 95 wavelengths). Deeper pixels are formed from the part of
+  their aperture whose echoes still fall into the record.
+- **Transmit angle.** The acquisition fired three plane waves per frame (-12, 0, +12 degrees). The example file holds
+  one shot per frame, the 0 degree transmit according to its author. The data alone cannot tell 0 from -12 degrees.
   A sampling rate of 20.0 MHz would bring the wire spacing to 19.9 mm, but it focuses the wires worse than 20.83 MHz,
   and the acquisition system derives its sampling rates from a 250 MHz clock (20.83 MHz = 250 / 12), so 20.0 MHz is
   not a rate it offers. The cause is still open.

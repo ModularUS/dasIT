@@ -52,7 +52,7 @@ def test_every_generation_is_reproduced(frames, stored):
         assert list(frame.shape) == e["shape"], name
         if same_libraries:
             assert G.sha(frame) == e["sha256"], f"{name}: result changed"
-        measured = G.measure(np.abs(frame), x, z)
+        measured = G.measured(name, frame, x, z)
         for key in ("lateral_scale_percent", "depth_scale_percent", "depth_offset_mm", "cylinder_contrast_db", "speckle_snr"):
             assert measured[key] == pytest.approx(e["phantom"][key], abs=0.02), f"{name} {key}"
 
@@ -119,6 +119,23 @@ def test_v10_is_v9_on_a_finer_lateral_grid(frames):
     assert fine.shape == (coarse.shape[0], G.FINE * (coarse.shape[1] - 1) + 1)
     assert np.abs(fine[:, ::G.FINE] - coarse).max() <= 1e-9 * np.abs(coarse).max()   # the old pixels are unchanged
     assert np.all(np.abs(fine) >= 0)                               # an envelope from beamforming cannot be negative
+
+
+def test_v11_touches_only_the_top_of_the_image(frames):
+    before, after = frames["v10"][0], frames["v11"][0]
+    z = frames["v11"][2]
+    changed = np.abs(after - before).max(axis=1) > 1e-3 * np.abs(before).max()
+    assert changed.any() and z[np.flatnonzero(changed)[-1]] < 6e-3          # the 40 samples reach 1.5 mm, the band-pass spreads them
+    assert np.abs(after[z > 6e-3] - before[z > 6e-3]).max() < 1e-3 * np.abs(before).max()
+
+
+def test_v12_moves_the_image_by_the_time_zero(frames):
+    expected = 1540.0 * G.T0 / 2                                            # 0.48 mm
+    assert expected == pytest.approx(0.478e-3, abs=0.002e-3)
+    before, after = G.measured("v11", *frames["v11"]), G.measured("v12", *frames["v12"])
+    assert after["depth_offset_mm"] - before["depth_offset_mm"] == pytest.approx(1e3 * expected, abs=0.06)
+    assert after["depth_wire_spacing_mm"] == pytest.approx(before["depth_wire_spacing_mm"], abs=0.05)   # an offset, not a scale
+    assert after["lateral_scale_percent"] == pytest.approx(before["lateral_scale_percent"], abs=0.1)
 
 
 # ---- the corrected helpers

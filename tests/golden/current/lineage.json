@@ -14,21 +14,21 @@
    ],
    "against_parent": null,
    "phantom": {
-    "lateral_spacing_mm": 6.031965041449839,
-    "lateral_scale_percent": 0.5327506908306523,
-    "depth_wire_spacing_mm": 19.102058981973382,
-    "depth_scale_percent": -4.489705090133089,
-    "near_depth_step_mm": 0.9310241194896367,
-    "depth_offset_mm": 0.7515114452502277,
+    "lateral_spacing_mm": 6.032827955822903,
+    "lateral_scale_percent": 0.547132597048372,
+    "depth_wire_spacing_mm": 19.106157840055364,
+    "depth_scale_percent": -4.469210799723178,
+    "near_depth_step_mm": 0.9344381098765736,
+    "depth_offset_mm": 0.733932976375344,
     "wire_width_lateral_mm": [
-     0.9883934697160958,
-     0.9598458576010755,
-     1.0928501552861556
+     0.92770879099454,
+     0.9251086443451799,
+     1.0544194260830906
     ],
     "wire_width_axial_mm": [
-     0.396812858868752,
-     0.4145942010805552,
-     0.4262257131288469
+     0.3726959727094132,
+     0.39642150643970014,
+     0.4129994265512725
     ],
     "cylinder_contrast_db": 10.940904196258678,
     "cylinder_cnr": 1.3298917054406623,
@@ -52,21 +52,21 @@
     "envelope_correlation": 0.9999946602574278
    },
    "phantom": {
-    "lateral_spacing_mm": 6.031965040708548,
-    "lateral_scale_percent": 0.5327506784758018,
-    "depth_wire_spacing_mm": 19.102058982593572,
-    "depth_scale_percent": -4.489705087032137,
-    "near_depth_step_mm": 0.9310241189874916,
-    "depth_offset_mm": 0.751511446805103,
+    "lateral_spacing_mm": 6.032827955098212,
+    "lateral_scale_percent": 0.5471325849702113,
+    "depth_wire_spacing_mm": 19.106157840675476,
+    "depth_scale_percent": -4.469210796622624,
+    "near_depth_step_mm": 0.9344381092608506,
+    "depth_offset_mm": 0.7339329783095935,
     "wire_width_lateral_mm": [
-     0.988393469578171,
-     0.9598458534378416,
-     1.0928501735810778
+     0.927708791067498,
+     0.9251086413730504,
+     1.0544194451286688
     ],
     "wire_width_axial_mm": [
-     0.39681285477678346,
-     0.41459420200676916,
-     0.42622572322512303
+     0.37269596941511995,
+     0.3964215063728827,
+     0.41299943641421816
     ],
     "cylinder_contrast_db": 10.941788594981322,
     "cylinder_cnr": 1.3299717405943492,
@@ -90,21 +90,21 @@
     "envelope_correlation": 0.9999998631941381
    },
    "phantom": {
-    "lateral_spacing_mm": 6.031962155200406,
-    "lateral_scale_percent": 0.5327025866734392,
-    "depth_wire_spacing_mm": 19.102058661512945,
-    "depth_scale_percent": -4.489706692435269,
-    "near_depth_step_mm": 0.9310254876111606,
-    "depth_offset_mm": 0.7515063952116849,
+    "lateral_spacing_mm": 6.032819846322493,
+    "lateral_scale_percent": 0.5469974387082077,
+    "depth_wire_spacing_mm": 19.10615844691574,
+    "depth_scale_percent": -4.469207765421301,
+    "near_depth_step_mm": 0.934449860447816,
+    "depth_offset_mm": 0.7338718326650042,
     "wire_width_lateral_mm": [
-     0.988372780090176,
-     0.9598476685376034,
-     1.092850772949004
+     0.92782717474521,
+     0.9251085405267985,
+     1.054427964964305
     ],
     "wire_width_axial_mm": [
-     0.39679766786007303,
-     0.4145930537007737,
-     0.4262235203541084
+     0.3726479135681391,
+     0.39642082446877674,
+     0.4129901146399172
     ],
     "cylinder_contrast_db": 10.94180052184126,
     "cylinder_cnr": 1.3299745786745976,
@@ -128,21 +128,21 @@
     "envelope_correlation": 0.9909799428430901
    },
    "phantom": {
-    "lateral_spacing_mm": 6.000400792477671,
-    "lateral_scale_percent": 0.006679874627857352,
-    "depth_wire_spacing_mm": 19.101636970688723,
-    "depth_scale_percent": -4.491815146556388,
-    "near_depth_step_mm": 0.9311390970674147,
-    "depth_offset_mm": 0.7513918056195551,
+    "lateral_spacing_mm": 6.0012561627609875,
+    "lateral_scale_percent": 0.020936046016450938,
+    "depth_wire_spacing_mm": 19.115024408060194,
+    "depth_scale_percent": -4.424877959699036,
+    "near_depth_step_mm": 0.9346330867221222,
+    "depth_offset_mm": 0.733722188966789,
     "wire_width_lateral_mm": [
-     0.9818835450967117,
-     0.9548484619306541,
-     1.0247325277358916
+     0.9210981587363439,
+     0.9202902668782382,
+     0.9952457671011463
     ],
     "wire_width_axial_mm": [
-     0.3968194334352864,
-     0.4173760828165413,
-     0.4222732014899066
+     0.3732060653560565,
+     0.40090342819703,
+     0.40863965647657335
     ],
     "cylinder_contrast_db": 11.002891697061866,
     "cylinder_cnr": 1.3466644066657494,
@@ -166,24 +166,24 @@
     "envelope_correlation": 0.9928299458070351
    },
    "phantom": {
-    "lateral_spacing_mm": 6.00262927371193,
-    "lateral_scale_percent": 0.04382122853217041,
-    "depth_wire_spacing_mm": 19.10953406003474,
-    "depth_scale_percent": -4.452329699826296,
-    "near_depth_step_mm": 0.9286548163529896,
-    "depth_offset_mm": 0.765236935928044,
+    "lateral_spacing_mm": 6.000333180444837,
+    "lateral_scale_percent": 0.00555300741396092,
+    "depth_wire_spacing_mm": 19.11096974466277,
+    "depth_scale_percent": -4.445151276686143,
+    "near_depth_step_mm": 0.932706652702017,
+    "depth_offset_mm": 0.7438196603137754,
     "wire_width_lateral_mm": [
-     1.1509993233526894,
-     1.094542974162876,
-     1.1996049400652449
+     1.0982028118387441,
+     1.050996037752365,
+     1.1110582205862936
     ],
     "wire_width_axial_mm": [
-     0.4016430725989881,
-     0.41432260756431794,
-     0.4204888327616156
+     0.37463398304208995,
+     0.39592361588435715,
+     0.40600921280022867
     ],
-    "cylinder_contrast_db": 10.881473134958684,
-    "cylinder_cnr": 1.3395170658249165,
+    "cylinder_contrast_db": 10.882401107277396,
+    "cylinder_cnr": 1.3395717247784418,
     "speckle_snr": 1.8781476043041798,
     "brightness_40_over_10_mm_db": -0.42597921789550075
    }
@@ -204,21 +204,21 @@
     "envelope_correlation": 0.9688204455640269
    },
    "phantom": {
-    "lateral_spacing_mm": 6.0076917104575,
-    "lateral_scale_percent": 0.1281951742916787,
-    "depth_wire_spacing_mm": 19.112545178166847,
-    "depth_scale_percent": -4.4372741091657675,
-    "near_depth_step_mm": 0.9243109273627815,
-    "depth_offset_mm": 0.7817578097622937,
+    "lateral_spacing_mm": 6.000427492478922,
+    "lateral_scale_percent": 0.007124874648689605,
+    "depth_wire_spacing_mm": 19.11275461075007,
+    "depth_scale_percent": -4.436226946249655,
+    "near_depth_step_mm": 0.9338467717103536,
+    "depth_offset_mm": 0.7384511282092587,
     "wire_width_lateral_mm": [
-     1.1289777444311577,
-     1.0891833632346175,
-     1.1626278892734052
+     1.0991453907547957,
+     1.0604824167277254,
+     1.1401501863402443
     ],
     "wire_width_axial_mm": [
-     0.40186647585508933,
-     0.4147275634777087,
-     0.41889919052154034
+     0.37496594644905157,
+     0.4031856382968412,
+     0.4034275887101918
     ],
     "cylinder_contrast_db": 11.386788556655693,
     "cylinder_cnr": 1.3595045816798978,
@@ -242,21 +242,21 @@
     "envelope_correlation": 0.8606696253343874
    },
    "phantom": {
-    "lateral_spacing_mm": 5.9971406521660215,
-    "lateral_scale_percent": -0.04765579723297053,
-    "depth_wire_spacing_mm": 19.113054580805212,
-    "depth_scale_percent": -4.434727095973945,
-    "near_depth_step_mm": 0.9326450474214715,
-    "depth_offset_mm": 0.7355924509171337,
+    "lateral_spacing_mm": 5.999647304120723,
+    "lateral_scale_percent": -0.005878264654624044,
+    "depth_wire_spacing_mm": 19.1092015464218,
+    "depth_scale_percent": -4.453992267890994,
+    "near_depth_step_mm": 0.9352482711413057,
+    "depth_offset_mm": 0.7270243581681946,
     "wire_width_lateral_mm": [
-     1.165244609328349,
-     1.0891833632346166,
-     1.1633203162485344
+     1.106613214120544,
+     1.0604273397903299,
+     1.139174517594671
     ],
     "wire_width_axial_mm": [
-     0.3991607517419559,
-     0.4142618371412843,
-     0.41907274444005654
+     0.37421260730285083,
+     0.40246576910838244,
+     0.4025964905272956
     ],
     "cylinder_contrast_db": 10.831781327836772,
     "cylinder_cnr": 1.2769764839728959,
@@ -280,21 +280,21 @@
     "envelope_correlation": 0.9879680759504583
    },
    "phantom": {
-    "lateral_spacing_mm": 5.997799170037617,
-    "lateral_scale_percent": -0.03668049937304296,
-    "depth_wire_spacing_mm": 19.114786377950512,
-    "depth_scale_percent": -4.426068110247439,
-    "near_depth_step_mm": 0.9278600175393125,
-    "depth_offset_mm": 0.7296120904315471,
+    "lateral_spacing_mm": 6.001636396967837,
+    "lateral_scale_percent": 0.02727328279727992,
+    "depth_wire_spacing_mm": 19.105902266935082,
+    "depth_scale_percent": -4.47048866532459,
+    "near_depth_step_mm": 0.9317637909381705,
+    "depth_offset_mm": 0.7078195418689215,
     "wire_width_lateral_mm": [
-     1.135377362675155,
-     1.0867795927325274,
-     1.1189774176069138
+     1.076645014548675,
+     1.0599376278768664,
+     1.0931729400052437
     ],
     "wire_width_axial_mm": [
-     0.41790368796532773,
-     0.436935956163553,
-     0.4360293337855598
+     0.38776307965797746,
+     0.4202253980192707,
+     0.41992368803018376
     ],
     "cylinder_contrast_db": 10.791303558065442,
     "cylinder_cnr": 1.2664538549573265,
@@ -318,21 +318,21 @@
     "envelope_correlation": 0.9012446161797248
    },
    "phantom": {
-    "lateral_spacing_mm": 5.997669201701453,
-    "lateral_scale_percent": -0.03884663830912016,
-    "depth_wire_spacing_mm": 19.115136669107773,
-    "depth_scale_percent": -4.424316654461135,
-    "near_depth_step_mm": 0.9289344737269234,
-    "depth_offset_mm": 0.7230556577430646,
+    "lateral_spacing_mm": 6.001108065371863,
+    "lateral_scale_percent": 0.018467756197715346,
+    "depth_wire_spacing_mm": 19.106181983379336,
+    "depth_scale_percent": -4.469090083103322,
+    "near_depth_step_mm": 0.9314396746174017,
+    "depth_offset_mm": 0.7072506889872853,
     "wire_width_lateral_mm": [
-     1.1361777977997363,
-     1.0883190081978948,
-     1.1197722358544253
+     1.0772824848978122,
+     1.0608090124573661,
+     1.093947914555811
     ],
     "wire_width_axial_mm": [
-     0.41703567353515664,
-     0.43711023191727444,
-     0.4360151871308062
+     0.38764367539265393,
+     0.42062380870788363,
+     0.4199250195678881
     ],
     "cylinder_contrast_db": 10.583839217464263,
     "cylinder_cnr": 1.2321984039785954,
@@ -350,26 +350,102 @@
    ],
    "against_parent": null,
    "phantom": {
-    "lateral_spacing_mm": 5.99777101979502,
-    "lateral_scale_percent": -0.03714967008300318,
-    "depth_wire_spacing_mm": 19.111266745408937,
-    "depth_scale_percent": -4.443666272955316,
-    "near_depth_step_mm": 0.9285387798786365,
-    "depth_offset_mm": 0.72469207520447,
+    "lateral_spacing_mm": 5.998249137230445,
+    "lateral_scale_percent": -0.02918104615924344,
+    "depth_wire_spacing_mm": 19.0996817815856,
+    "depth_scale_percent": -4.50159109207201,
+    "near_depth_step_mm": 0.9310580823336971,
+    "depth_offset_mm": 0.7089034728010236,
     "wire_width_lateral_mm": [
-     1.1267757614968754,
-     1.0751954131480856,
-     1.1148821274589114
+     1.072022718326793,
+     1.0482821046351367,
+     1.0913079442828921
     ],
     "wire_width_axial_mm": [
-     0.41893198167200324,
-     0.4340363297325798,
-     0.4368445216000494
+     0.3895248492420376,
+     0.41805319542029595,
+     0.41839735502460346
     ],
-    "cylinder_contrast_db": 10.427968124485927,
-    "cylinder_cnr": 1.2190573234439983,
+    "cylinder_contrast_db": 10.427962221450294,
+    "cylinder_cnr": 1.2190518461180873,
     "speckle_snr": 1.8340861176514571,
     "brightness_40_over_10_mm_db": -17.15642978832517
+   }
+  },
+  {
+   "name": "v11",
+   "change": "the first 40 samples kept (v1.0 set them to zero; the record starts at 5 wavelengths depth, they are echoes)",
+   "sha256": "0a53cbf331a1b5e1beafa150adbb622fa892e3b869f72109e2267d2c2a5c55e3",
+   "shape": [
+    708,
+    574
+   ],
+   "against_parent": {
+    "max_over_max": 2.244621344968201,
+    "mean_over_mean": 0.6862145505771283,
+    "rows_changed": 708,
+    "first_row_changed": 0,
+    "envelope_correlation": 0.07206282438043272
+   },
+   "phantom": {
+    "lateral_spacing_mm": 5.9983983534391845,
+    "lateral_scale_percent": -0.026694109346925288,
+    "depth_wire_spacing_mm": 19.099670588310488,
+    "depth_scale_percent": -4.501647058447555,
+    "near_depth_step_mm": 0.9346746364853825,
+    "depth_offset_mm": 0.6919892614240284,
+    "wire_width_lateral_mm": [
+     1.0716226310521144,
+     1.0483190966055338,
+     1.0912969624107602
+    ],
+    "wire_width_axial_mm": [
+     0.4001923628756095,
+     0.41802755673904224,
+     0.41839439767759495
+    ],
+    "cylinder_contrast_db": 10.42791604301959,
+    "cylinder_cnr": 1.2190517354418131,
+    "speckle_snr": 1.8340743145673362,
+    "brightness_40_over_10_mm_db": -17.15650252452772
+   }
+  },
+  {
+   "name": "v12",
+   "change": "time of sample 0 from the acquisition settings: start depth minus lens, +0.62 us",
+   "sha256": "fde5a51b43ef59e21d0a1de90aca0538b8b5b670456ae0949f3ef04694fa57a4",
+   "shape": [
+    708,
+    574
+   ],
+   "against_parent": {
+    "max_over_max": 1.0,
+    "mean_over_mean": 1.5280801925027627,
+    "rows_changed": 708,
+    "first_row_changed": 0,
+    "envelope_correlation": 0.08218093858612716
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.001104033710195,
+    "lateral_scale_percent": 0.018400561836595664,
+    "depth_wire_spacing_mm": 19.10715267029938,
+    "depth_scale_percent": -4.464236648503094,
+    "near_depth_step_mm": 0.9364086455322101,
+    "depth_offset_mm": 1.1677444940301018,
+    "wire_width_lateral_mm": [
+     0.9811849958215054,
+     1.0115442554318845,
+     1.0955144810543467
+    ],
+    "wire_width_axial_mm": [
+     0.4004868793823915,
+     0.4127553317063062,
+     0.4226332312439177
+    ],
+    "cylinder_contrast_db": 10.464550392510015,
+    "cylinder_cnr": 1.2308802321663128,
+    "speckle_snr": 1.8271986430379028,
+    "brightness_40_over_10_mm_db": -16.514762331954266
    }
   }
  ]

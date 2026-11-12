@@ -28,6 +28,12 @@ EXAMPLE = HERE.parent / "example_data" / "CIRSphantom_GE9LD_VVantage"
 LEGACY, CURRENT = HERE / "golden" / "usdatarecycler", HERE / "golden" / "current"
 PITCH, N_ELEMENTS, C, START_SAMPLES, CROP = 0.23e-3, 192, 1540.0, 40, 1416
 BAND_HZ = (3312500.0, 7287500.0)                       # the band edges of transducer.csv
+# From the Verasonics setup of the recording (Trans.frequency, Receive.startDepth, Trans.lensCorrection, P.endDepth),
+# all in wavelengths at 5.2083 MHz and 1540 m/s:
+FC, START_DEPTH_WL, LENS_WL, DESIGN_DEPTH_WL = 5208300.0, 5.0, 3.3820129870129874, 95.0
+T0 = 2 * (START_DEPTH_WL - LENS_WL) / FC               # s: the record starts 2 x 5 periods after the transmit, the lens
+                                                       # delays every echo by 2 x 3.38 periods. +0.62 us, 0.48 mm in depth
+DESIGN_DEPTH_M = DESIGN_DEPTH_WL * 1540.0 / FC         # 28.1 mm: the depth the acquisition was set up for
 F_NUMBER, FINE = 1.5, 3                                # default aperture; lateral pixels per element of the display grid
 OVERSAMPLE = 4                                         # of the record before linear interpolation: 1.2 % error against 8x (1x: 21 %, 2x: 5.5 %)
 
@@ -41,6 +47,8 @@ CHANGES = {
     "v8": "a real band-pass filter (Butterworth, zero phase) instead of the 10-tap filter that passed DC",
     "v9": "no gain curve applied (v1.0 multiplied by the raw TGC control values)",
     "v10": "three lateral pixels per element, beamformed (not interpolated afterwards)",
+    "v11": "the first 40 samples kept (v1.0 set them to zero; the record starts at 5 wavelengths depth, they are echoes)",
+    "v12": "time of sample 0 from the acquisition settings: start depth minus lens, +0.62 us",
 }
 
 
@@ -49,10 +57,11 @@ def sha(x):
 
 
 # ---- the signal before beamforming
-def raw_record():
+def raw_record(keep_start=False):
     """Frame 0, [4096 samples, 192 channels], the samples before the first echo set to zero as in the notebook."""
     rf = load_rf(EXAMPLE / "CIRS_phantom.h5")[:, :, 0, 0]
-    rf[:START_SAMPLES] = 0
+    if not keep_start:
+        rf[:START_SAMPLES] = 0
     return rf
 
 
@@ -70,8 +79,8 @@ def legacy_signal(n_samples):
     return ds.analytic(sps.convolve(rf, taps[:, None], mode="same"))
 
 
-def corrected_signal(gain):
-    rf = raw_record()
+def corrected_signal(gain, keep_start=False):
+    rf = raw_record(keep_start)
     if gain:
         rf = rf * legacy_gain(rf.shape[0])[:, None]
     return ds.analytic(ds.bandpass(rf, BAND_HZ, 4 * 5208300.0))
@@ -83,7 +92,7 @@ def settings(name):
     g = legacy_geometry()
     k = int(name[1:])
     true_x = linear_array(N_ELEMENTS, PITCH)
-    signal = legacy_signal(CROP if k == 2 else 4096) if k <= 7 else corrected_signal(gain=(k == 8))
+    signal = legacy_signal(CROP if k == 2 else 4096) if k <= 7 else corrected_signal(gain=(k == 8), keep_start=(k >= 11))
     fs = g["fs"]
     kw = dict(core_settings(g, "hann"), interp="nearest")
     if k >= 4:                                                    # true positions; the legacy element count per depth kept
@@ -95,9 +104,17 @@ def settings(name):
         kw.update(interp="linear", fs=fs)
     if k >= 7:
         kw.update(normalise=True)
+    if k >= 12:
+        kw.update(t0=T0)
     if k >= 10:
         kw.update(grid_x=np.linspace(true_x[0], true_x[-1], FINE * (N_ELEMENTS - 1) + 1))
     return signal, kw
+
+
+def measured(name, frame, x, z):
+    """The phantom metrics of a generation. From v12 on the image is drawn c T0 / 2 deeper."""
+    shift = 1e3 * 1540.0 * T0 / 2 if name != "v1" and int(name[1:]) >= 12 else 0.0
+    return measure(np.abs(frame), x, z, depth_shift_mm=shift)
 
 
 def generation(name):
@@ -127,11 +144,11 @@ def lineage():
     import scipy
     parent, x, z = legacy_v1()
     entries = [dict(name="v1", change="dasIT 1.0 / usdatarecycler as frozen in tests/golden/usdatarecycler", sha256=None,
-                    shape=list(parent.shape), against_parent=None, phantom=measure(np.abs(parent), x, z))]
+                    shape=list(parent.shape), against_parent=None, phantom=measured("v1", parent, x, z))]
     for name in CHANGES:
         frame, x, z = generation(name)
         entries.append(dict(name=name, change=CHANGES[name], sha256=sha(frame), shape=list(frame.shape),
-                            against_parent=compare(frame, parent), phantom=measure(np.abs(frame), x, z)))
+                            against_parent=compare(frame, parent), phantom=measured(name, frame, x, z)))
         parent = frame
     versions = dict(numpy=np.__version__, scipy=scipy.__version__)
     return dict(versions=versions, generations=entries), (frame, x, z)
@@ -165,9 +182,16 @@ LINEAGE_OPEN = """
 
 ## Open items
 
-- **Depth scale -4.4 % and depth offset +0.7 mm in every generation.** They do not come from the beamformer (v1 and
-  v10 agree). They belong to the description of the recording: sampling rate, speed of sound, time of the first
-  sample, lens. The example file carries no acquisition metadata. Not corrected until the acquisition settings are known.
+- **Depth scale -4.4 % in every generation.** It does not come from the beamformer (v1 and v10 agree) and not from
+  the time of the first sample (an offset, corrected in v12). The Verasonics setup of the recording confirms the
+  sampling rate (NS200BW at 5.2083 MHz) and 1540 m/s. Still unexplained.
+- **Depth offset.** Since v12 the time of sample 0 follows the acquisition settings. The near-field wires then sit
+  about 1.2 mm deeper than their nominal depth below the phantom surface. A layer of coupling gel between probe and
+  phantom would do that; it was not measured.
+- **The image was designed for 28 mm depth** (P.endDepth = 95 wavelengths). Deeper pixels are formed from the part of
+  their aperture whose echoes still fall into the record.
+- **Transmit angle.** The acquisition fired three plane waves per frame (-12, 0, +12 degrees). The example file holds
+  one shot per frame, the 0 degree transmit according to its author. The data alone cannot tell 0 from -12 degrees.
   A sampling rate of 20.0 MHz would bring the wire spacing to 19.9 mm, but it focuses the wires worse than 20.83 MHz,
   and the acquisition system derives its sampling rates from a 250 MHz clock (20.83 MHz = 250 / 12), so 20.0 MHz is
   not a rate it offers. The cause is still open.
