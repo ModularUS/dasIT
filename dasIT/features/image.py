@@ -103,3 +103,14 @@ class interpolate_bf():
     def imagegrid_mm(self):
         return self._signals_grid_mm
 
+
+class interp_lateral(interpolate_bf):
+    # Interface of dasIT v1.0, kept so that the v1.0 notebook and scripts run: lateral interpolation only.
+    # The interpolation itself is the one of interpolate_bf (cubic spline); v1.0 interpolated linearly.
+    def __init__(self, signals=None, transducer=None, medium=None, scale=2):
+        super().__init__(signals=signals, transducer=transducer, medium=medium, axial_scale=1, lateral_scale=scale)
+
+    @property
+    def signals_lateral_interp(self):
+        return self._signals_interp
+

@@ -29,7 +29,8 @@ class tg_compensation():
         self._alpha = medium.alpha
         self._alpha_power = medium.alpha_power
         if cntrl_points is not None:
-            self._control_points = cntrl_points
+            # the table of control points, or the TGCloader that holds it (interface of v1.0)
+            self._control_points = getattr(cntrl_points, 'tgc_control_points', cntrl_points)
         self._sound_speed = medium.speed_of_sound
         self._sampling_freq = medium.sampling_frequency
 
@@ -41,7 +42,7 @@ class tg_compensation():
         elif mode == 'alpha':
             self._tgc_signals = self.tgc_from_alpha()
         else:
-            print(r'ERROR MESSAGE: Selected tgc type does not exist. Choose either \textit{points} or \textit{alpha}.')
+            raise ValueError(f"Unknown tgc mode '{mode}'. Choose 'points' or 'alpha'.")
 
 
     def tgc_from_control_points(self):
