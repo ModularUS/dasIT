@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dasIT"
+version = "1.1.0.dev0"
+description = "plane-wave delay-and-sum beamformer"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Christoph Leitner", email = "christoph.leitner@tugraz.at" }]
+dependencies = [
+    "numpy",
+    "scipy",
+    "pandas",
+    "h5py",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/ModularUS/dasIT"
+
+[tool.setuptools.packages.find]
+include = ["dasIT*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
