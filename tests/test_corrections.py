@@ -33,7 +33,7 @@ def stored():
 
 @pytest.fixture(scope="module")
 def frames():
-    """{name: (frame, grid_x, grid_z)} of v1 .. v10, computed now."""
+    """{name: (frame, grid_x, grid_z)} of every generation, computed now."""
     out = {"v1": G.legacy_v1()}
     out.update({name: G.generation(name) for name in G.CHANGES})
     return out

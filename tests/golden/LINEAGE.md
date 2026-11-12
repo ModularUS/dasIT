@@ -27,9 +27,14 @@ lateral scale 0 %, depth scale 0 %, depth offset 0 mm, speckle 1.91.
 
 ## Open items
 
-- **Depth scale -4.4 % in every generation.** It does not come from the beamformer (v1 and v10 agree) and not from
+- **Depth scale -4.5 % in every generation.** It does not come from the beamformer (v1 and v12 agree) and not from
   the time of the first sample (an offset, corrected in v12). The Verasonics setup of the recording confirms the
-  sampling rate (NS200BW at 5.2083 MHz) and 1540 m/s. Still unexplained.
+  sampling rate (NS200BW at 5.2083 MHz) and 1540 m/s.
+  A sampling rate of 20.0 MHz would bring the wire spacing to 19.9 mm, but it focuses the wires worse than 20.83 MHz,
+  and the acquisition system derives its sampling rates from a 250 MHz clock (20.83 MHz = 250 / 12), so 20.0 MHz is
+  not a rate it offers. The cause is still open.
+- **The wires are about 1.0 mm wide laterally, theory for f/1.5 at 5.2 MHz is about 0.64 mm.** Unexplained. Likely
+  linked to the item above.
 - **Depth offset.** Since v12 the time of sample 0 follows the acquisition settings. The near-field wires then sit
   about 1.2 mm deeper than their nominal depth below the phantom surface. A layer of coupling gel between probe and
   phantom would do that; it was not measured.
@@ -37,10 +42,5 @@ lateral scale 0 %, depth scale 0 %, depth offset 0 mm, speckle 1.91.
   their aperture whose echoes still fall into the record.
 - **Transmit angle.** The acquisition fired three plane waves per frame (-12, 0, +12 degrees). The example file holds
   one shot per frame, the 0 degree transmit according to its author. The data alone cannot tell 0 from -12 degrees.
-  A sampling rate of 20.0 MHz would bring the wire spacing to 19.9 mm, but it focuses the wires worse than 20.83 MHz,
-  and the acquisition system derives its sampling rates from a 250 MHz clock (20.83 MHz = 250 / 12), so 20.0 MHz is
-  not a rate it offers. The cause is still open.
-- **The wires are about 1.1 mm wide laterally, theory for f/1.5 at 5.2 MHz is about 0.64 mm.** Unexplained. Likely
-  linked to the item above.
-- **v5 widens the wires from 0.95 to 1.09 mm.** Expected: the aperture changes from z / 1.27 (the old rule, taken from
+- **v5 widens the wires from 0.92 to 1.05 mm.** Expected: the aperture changes from z / 1.27 (the old rule, taken from
   the elevation focus) to z / 1.5. The f-number is a setting; 1.5 is the default, not a measured optimum for this probe.
