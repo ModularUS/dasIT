@@ -1,0 +1,227 @@
+{
+ "label": "recycler",
+ "checkout": "git archive of the branch, extracted outside the repository",
+ "data_file_sha256": "9f9ab4236b3151128ecafbc3ddb5b48c7f38314604a7539e120f4f22bcf99096",
+ "raw_shape_samples_channels_frames": [
+  4096,
+  192,
+  5
+ ],
+ "settings": {
+  "adc_ratio": 4,
+  "pinmapbase": 1,
+  "elevation_focus": 0.028,
+  "focus_number": null,
+  "totalnr_planewaves": 1,
+  "planewave_angle_interval": [
+   0,
+   0
+  ],
+  "axial_cutoff_wavelength": 5,
+  "speed_of_sound_ms": 1540,
+  "max_depth_wavelength": 177,
+  "axial_extrapolation_coef": 1.05,
+  "attenuation_coefficient": 0.75,
+  "attenuation_power": 1.5,
+  "tgc_mode": "points",
+  "filter_type": "gaussian",
+  "filter_order": 10,
+  "lateral_interp_scale": 3,
+  "dbrange": 58,
+  "frame": 0,
+  "center_frequency_hz": 5208300.0,
+  "transducer_elements_nr": 192,
+  "element_pitch_m": 0.00023,
+  "bandwidth_hz": [
+   3312500.0,
+   7287500.0
+  ],
+  "apodization": "hanning",
+  "max_depth_samples": 1416
+ },
+ "geometry": {
+  "sampling_frequency_hz": 20833200.0,
+  "wavelength_m": 0.00029568189236411116,
+  "start_depth_samples": 40,
+  "rx_echo_samples": 1416,
+  "element_x_first_last_m": [
+   -0.022080000000000002,
+   0.022080000000000002
+  ],
+  "element_spacing_m": 0.00023120418848167693,
+  "grid_nz": 708,
+  "grid_nx": 192,
+  "grid_dz_m": 7.392047309102779e-05,
+  "grid_z_last_m": 0.05226177447535665
+ },
+ "versions": {
+  "python": "3.10.21",
+  "numpy": "1.23.5",
+  "scipy": "1.10.1",
+  "pandas": "1.5.3",
+  "h5py": "3.8.0"
+ },
+ "deviations_from_the_notebook": [
+  "tg_compensation takes the control-point table (cntrl_points=loader.tgc_control_points), not the loader",
+  "apodization 'rec' of the notebook does not exist on this branch, 'hanning' is used",
+  "interp_lateral does not exist on this branch, interpolate_bf(axial_scale=1, lateral_scale=3) is used"
+ ],
+ "stages": {
+  "rf": {
+   "shape": [
+    1416,
+    192
+   ],
+   "dtype": "float64",
+   "sha256": "1cb2a2f48cfb2861ee5c79115ad60a88960d5efcde21cacff7ad02e11746150c",
+   "seconds": 0.0,
+   "peak_mb": 0.0,
+   "result_mb": 2.2,
+   "min": 0.0,
+   "max": 2228.0,
+   "mean": 106.10593588159134,
+   "nonfinite": 0
+  },
+  "tgc": {
+   "shape": [
+    1416,
+    192
+   ],
+   "dtype": "float64",
+   "sha256": "fbd84dbf6e37076395585fe5941071d97a032414aef8ec631646430bc8490245",
+   "seconds": 0.0,
+   "peak_mb": 0.0,
+   "result_mb": 2.2,
+   "min": 0.0,
+   "max": 1155790.7344632768,
+   "mean": 57777.2884330288,
+   "nonfinite": 0
+  },
+  "filtered": {
+   "shape": [
+    1416,
+    192
+   ],
+   "dtype": "float64",
+   "sha256": "0951f792b7878a157fea477ab3d31e5477f423896ec22ae90c0f84fb89bff243",
+   "seconds": 0.0,
+   "peak_mb": 0.0,
+   "result_mb": 2.2,
+   "min": 0.0,
+   "max": 491922.6647182216,
+   "mean": 22746.81616296809,
+   "nonfinite": 0
+  },
+  "analytic": {
+   "shape": [
+    1416,
+    192
+   ],
+   "dtype": "complex128",
+   "sha256": "fe588ad644ccf48c5a6d8ab1327eb7ae05e422dec97752879fd0a00ed2f57b3f",
+   "seconds": 0.069,
+   "peak_mb": 65.3,
+   "result_mb": 4.3,
+   "min": 0.024411373676029743,
+   "max": 494735.4576495657,
+   "mean": 35709.113412344515,
+   "nonfinite": 0
+  },
+  "apodization": {
+   "shape": [
+    708,
+    192,
+    192,
+    1
+   ],
+   "dtype": "float64",
+   "sha256": "a6fd1c8351b82df3647049c68467b562ac5280d8c6f2707949fa9f4a8102896b",
+   "seconds": 0.516,
+   "peak_mb": 1808.0,
+   "result_mb": 208.8,
+   "min": 0.0,
+   "max": 1.0,
+   "mean": 0.21175213914878427,
+   "nonfinite": 0
+  },
+  "delays": {
+   "shape": [
+    708,
+    192,
+    192,
+    1
+   ],
+   "dtype": "int32",
+   "sha256": "75f6e34794a7f2f14d12df160875a83e27c9507bd5a9e1cc2d4d88b29d403b96",
+   "seconds": 0.0,
+   "peak_mb": 0.0,
+   "result_mb": 104.4,
+   "min": 0.0,
+   "max": 1415.0,
+   "mean": 747.5553704194131,
+   "nonfinite": 0,
+   "set_to_zero_by_the_depth_limit": 773884
+  },
+  "beamformed": {
+   "shape": [
+    708,
+    192
+   ],
+   "dtype": "complex128",
+   "sha256": "9a09fd0556f89ff761a298bd1825442ca9551de09b4098534e4d1f5390ae79b4",
+   "seconds": 1.823,
+   "peak_mb": 1670.5,
+   "result_mb": 2.2,
+   "min": 0.024411373676029743,
+   "max": 11184796.177131834,
+   "mean": 242633.41110643386,
+   "nonfinite": 0
+  },
+  "envelope": {
+   "shape": [
+    708,
+    192
+   ],
+   "dtype": "float64",
+   "sha256": "6d8075810317159326d6a3c3618e623a75b1b8c447d8d2248d3f46f26a5875ed",
+   "seconds": 0.001,
+   "peak_mb": 1.1,
+   "result_mb": 1.1,
+   "min": 0.024411373676029743,
+   "max": 11184796.177131834,
+   "mean": 242633.41110643386,
+   "nonfinite": 0
+  },
+  "interpolated": {
+   "shape": [
+    708,
+    576
+   ],
+   "dtype": "float64",
+   "sha256": "b6b33dec3da505e75e36fd1f6fedfc3aa00a2032f90f00346764b5586746caa6",
+   "seconds": 0.044,
+   "peak_mb": 10.0,
+   "result_mb": 3.3,
+   "min": 0.02441137367602686,
+   "max": 11442862.228768038,
+   "mean": 242631.37415554337,
+   "nonfinite": 0
+  },
+  "log_image": {
+   "shape": [
+    708,
+    576
+   ],
+   "dtype": "float64",
+   "sha256": "cf5b0d0a1e74b42ba5cee0c4980e1bc8cb5ab61c5fb620ba82296d800c0a089e",
+   "seconds": 0.018,
+   "peak_mb": 9.8,
+   "result_mb": 3.3,
+   "min": 0.0,
+   "max": 255.0,
+   "mean": 87.8324799905838,
+   "nonfinite": 0
+  }
+ },
+ "note": "golden.npz holds float32 / complex64 copies; the SHA-256 values are of the full-precision arrays"
+}

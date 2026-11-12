@@ -11,3 +11,11 @@ dasIT is a delay-and-sum beamformer for planewave ultrasound implemented in Pyth
 # License
 This program is free software and licensed under the Apache License v2.0 - see the [LICENSE](https://github.com/ModularUS/dasIT/blob/main/LICENSE) file for details.
 
+
+# Install and test
+```
+pip install git+https://github.com/ModularUS/dasIT          # as a package
+pip install -e .[test]                                      # from a checkout, for development
+pytest                                                      # compares every processing stage with the golden model
+```
+The tests run the chain of `beamform_image.ipynb` on the bundled example data and compare each stage with the reference results in `tests/golden/` (see `tests/golden/README.md`).
