@@ -1,0 +1,376 @@
+{
+ "versions": {
+  "numpy": "2.5.4",
+  "scipy": "1.18.1"
+ },
+ "generations": [
+  {
+   "name": "v1",
+   "change": "dasIT 1.0 / usdatarecycler as frozen in tests/golden/usdatarecycler",
+   "sha256": null,
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": null,
+   "phantom": {
+    "lateral_spacing_mm": 6.031965041449839,
+    "lateral_scale_percent": 0.5327506908306523,
+    "depth_wire_spacing_mm": 19.102058981973382,
+    "depth_scale_percent": -4.489705090133089,
+    "near_depth_step_mm": 0.9310241194896367,
+    "depth_offset_mm": 0.7515114452502277,
+    "wire_width_lateral_mm": [
+     0.9883934697160958,
+     0.9598458576010755,
+     1.0928501552861556
+    ],
+    "wire_width_axial_mm": [
+     0.396812858868752,
+     0.4145942010805552,
+     0.4262257131288469
+    ],
+    "cylinder_contrast_db": 10.940904196258678,
+    "cylinder_cnr": 1.3298917054406623,
+    "speckle_snr": 1.8897314227281927,
+    "brightness_40_over_10_mm_db": -0.5244143924080389
+   }
+  },
+  {
+   "name": "v2",
+   "change": "a delay beyond the record adds nothing; path lengths in double precision",
+   "sha256": "9a0713b0b4c7cab9eb958f90a3b647ebf1c7d38f3799e9be42e7565ec51409cd",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.007004868212390507,
+    "mean_over_mean": 0.00029309816950148874,
+    "rows_changed": 543,
+    "first_row_changed": 48,
+    "envelope_correlation": 0.9999946602574278
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.031965040708548,
+    "lateral_scale_percent": 0.5327506784758018,
+    "depth_wire_spacing_mm": 19.102058982593572,
+    "depth_scale_percent": -4.489705087032137,
+    "near_depth_step_mm": 0.9310241189874916,
+    "depth_offset_mm": 0.751511446805103,
+    "wire_width_lateral_mm": [
+     0.988393469578171,
+     0.9598458534378416,
+     1.0928501735810778
+    ],
+    "wire_width_axial_mm": [
+     0.39681285477678346,
+     0.41459420200676916,
+     0.42622572322512303
+    ],
+    "cylinder_contrast_db": 10.941788594981322,
+    "cylinder_cnr": 1.3299717405943492,
+    "speckle_snr": 1.8895005018697746,
+    "brightness_40_over_10_mm_db": -0.5247219120978369
+   }
+  },
+  {
+   "name": "v3",
+   "change": "the full record of 4096 samples instead of the crop to 1416",
+   "sha256": "6cbe2b904399ff4cf99f86a2191086b10a9c2ae07178a13ef187e1ff0c5aaf94",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.00031800753157779814,
+    "mean_over_mean": 0.0004107050953509642,
+    "rows_changed": 708,
+    "first_row_changed": 0,
+    "envelope_correlation": 0.9999998631941381
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.031962155200406,
+    "lateral_scale_percent": 0.5327025866734392,
+    "depth_wire_spacing_mm": 19.102058661512945,
+    "depth_scale_percent": -4.489706692435269,
+    "near_depth_step_mm": 0.9310254876111606,
+    "depth_offset_mm": 0.7515063952116849,
+    "wire_width_lateral_mm": [
+     0.988372780090176,
+     0.9598476685376034,
+     1.092850772949004
+    ],
+    "wire_width_axial_mm": [
+     0.39679766786007303,
+     0.4145930537007737,
+     0.4262235203541084
+    ],
+    "cylinder_contrast_db": 10.94180052184126,
+    "cylinder_cnr": 1.3299745786745976,
+    "speckle_snr": 1.8895005576836414,
+    "brightness_40_over_10_mm_db": -0.5247618109679244
+   }
+  },
+  {
+   "name": "v4",
+   "change": "element positions one pitch apart (were stretched by 192/191)",
+   "sha256": "d14d7fb620164c535e0854f7a67e6b74f2e95118f468967501149f93e42bfd3f",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.07465469930284586,
+    "mean_over_mean": 0.1398493218045689,
+    "rows_changed": 536,
+    "first_row_changed": 51,
+    "envelope_correlation": 0.9909799428430901
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.000400792477671,
+    "lateral_scale_percent": 0.006679874627857352,
+    "depth_wire_spacing_mm": 19.101636970688723,
+    "depth_scale_percent": -4.491815146556388,
+    "near_depth_step_mm": 0.9311390970674147,
+    "depth_offset_mm": 0.7513918056195551,
+    "wire_width_lateral_mm": [
+     0.9818835450967117,
+     0.9548484619306541,
+     1.0247325277358916
+    ],
+    "wire_width_axial_mm": [
+     0.3968194334352864,
+     0.4173760828165413,
+     0.4222732014899066
+    ],
+    "cylinder_contrast_db": 11.002891697061866,
+    "cylinder_cnr": 1.3466644066657494,
+    "speckle_snr": 1.8838069554715242,
+    "brightness_40_over_10_mm_db": -0.5162377487963845
+   }
+  },
+  {
+   "name": "v5",
+   "change": "aperture z / 1.5 with a Hann window that uses every element inside it",
+   "sha256": "443107901a8da240d3fccf50c4851d3015daef7fd0416c0f78ec21da532d889e",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.14412736559724176,
+    "mean_over_mean": 0.1365673027886383,
+    "rows_changed": 698,
+    "first_row_changed": 10,
+    "envelope_correlation": 0.9928299458070351
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.00262927371193,
+    "lateral_scale_percent": 0.04382122853217041,
+    "depth_wire_spacing_mm": 19.10953406003474,
+    "depth_scale_percent": -4.452329699826296,
+    "near_depth_step_mm": 0.9286548163529896,
+    "depth_offset_mm": 0.765236935928044,
+    "wire_width_lateral_mm": [
+     1.1509993233526894,
+     1.094542974162876,
+     1.1996049400652449
+    ],
+    "wire_width_axial_mm": [
+     0.4016430725989881,
+     0.41432260756431794,
+     0.4204888327616156
+    ],
+    "cylinder_contrast_db": 10.881473134958684,
+    "cylinder_cnr": 1.3395170658249165,
+    "speckle_snr": 1.8781476043041798,
+    "brightness_40_over_10_mm_db": -0.42597921789550075
+   }
+  },
+  {
+   "name": "v6",
+   "change": "linear interpolation between samples, after 4x oversampling of the record",
+   "sha256": "bbd58ddb681194f7eb3581ee3d063d8668ecafd2f0fe227ecab0ef9d4f0225f3",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.09363623744562874,
+    "mean_over_mean": 0.3079379703207977,
+    "rows_changed": 698,
+    "first_row_changed": 10,
+    "envelope_correlation": 0.9688204455640269
+   },
+   "phantom": {
+    "lateral_spacing_mm": 6.0076917104575,
+    "lateral_scale_percent": 0.1281951742916787,
+    "depth_wire_spacing_mm": 19.112545178166847,
+    "depth_scale_percent": -4.4372741091657675,
+    "near_depth_step_mm": 0.9243109273627815,
+    "depth_offset_mm": 0.7817578097622937,
+    "wire_width_lateral_mm": [
+     1.1289777444311577,
+     1.0891833632346175,
+     1.1626278892734052
+    ],
+    "wire_width_axial_mm": [
+     0.40186647585508933,
+     0.4147275634777087,
+     0.41889919052154034
+    ],
+    "cylinder_contrast_db": 11.386788556655693,
+    "cylinder_cnr": 1.3595045816798978,
+    "speckle_snr": 1.9071559543114915,
+    "brightness_40_over_10_mm_db": -0.3140034508020303
+   }
+  },
+  {
+   "name": "v7",
+   "change": "every pixel divided by the sum of its weights",
+   "sha256": "8a2f8d5a9835ff466f797507a4996cfbd109f2c6aad51987993cd8e3f067cf31",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.9646424781572528,
+    "mean_over_mean": 0.9691218092495356,
+    "rows_changed": 698,
+    "first_row_changed": 10,
+    "envelope_correlation": 0.8606696253343874
+   },
+   "phantom": {
+    "lateral_spacing_mm": 5.9971406521660215,
+    "lateral_scale_percent": -0.04765579723297053,
+    "depth_wire_spacing_mm": 19.113054580805212,
+    "depth_scale_percent": -4.434727095973945,
+    "near_depth_step_mm": 0.9326450474214715,
+    "depth_offset_mm": 0.7355924509171337,
+    "wire_width_lateral_mm": [
+     1.165244609328349,
+     1.0891833632346166,
+     1.1633203162485344
+    ],
+    "wire_width_axial_mm": [
+     0.3991607517419559,
+     0.4142618371412843,
+     0.41907274444005654
+    ],
+    "cylinder_contrast_db": 10.831781327836772,
+    "cylinder_cnr": 1.2769764839728959,
+    "speckle_snr": 1.8718335210315644,
+    "brightness_40_over_10_mm_db": -11.179508416942
+   }
+  },
+  {
+   "name": "v8",
+   "change": "a real band-pass filter (Butterworth, zero phase) instead of the 10-tap filter that passed DC",
+   "sha256": "fea09ed0771ae747012a7894c8aa8ac7d6044297a24fd0cc43b721b4a43f6b9e",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 1.6178946933291283,
+    "mean_over_mean": 1.828698503768965,
+    "rows_changed": 708,
+    "first_row_changed": 0,
+    "envelope_correlation": 0.9879680759504583
+   },
+   "phantom": {
+    "lateral_spacing_mm": 5.997799170037617,
+    "lateral_scale_percent": -0.03668049937304296,
+    "depth_wire_spacing_mm": 19.114786377950512,
+    "depth_scale_percent": -4.426068110247439,
+    "near_depth_step_mm": 0.9278600175393125,
+    "depth_offset_mm": 0.7296120904315471,
+    "wire_width_lateral_mm": [
+     1.135377362675155,
+     1.0867795927325274,
+     1.1189774176069138
+    ],
+    "wire_width_axial_mm": [
+     0.41790368796532773,
+     0.436935956163553,
+     0.4360293337855598
+    ],
+    "cylinder_contrast_db": 10.791303558065442,
+    "cylinder_cnr": 1.2664538549573265,
+    "speckle_snr": 1.866707078125647,
+    "brightness_40_over_10_mm_db": -11.517786741132179
+   }
+  },
+  {
+   "name": "v9",
+   "change": "no gain curve applied (v1.0 multiplied by the raw TGC control values)",
+   "sha256": "9d50d039f5caa45ea57d456c41b8072ac8b47fa97d50658872095100af2d01bc",
+   "shape": [
+    708,
+    192
+   ],
+   "against_parent": {
+    "max_over_max": 0.9980738967710898,
+    "mean_over_mean": 0.9979790620728461,
+    "rows_changed": 708,
+    "first_row_changed": 0,
+    "envelope_correlation": 0.9012446161797248
+   },
+   "phantom": {
+    "lateral_spacing_mm": 5.997669201701453,
+    "lateral_scale_percent": -0.03884663830912016,
+    "depth_wire_spacing_mm": 19.115136669107773,
+    "depth_scale_percent": -4.424316654461135,
+    "near_depth_step_mm": 0.9289344737269234,
+    "depth_offset_mm": 0.7230556577430646,
+    "wire_width_lateral_mm": [
+     1.1361777977997363,
+     1.0883190081978948,
+     1.1197722358544253
+    ],
+    "wire_width_axial_mm": [
+     0.41703567353515664,
+     0.43711023191727444,
+     0.4360151871308062
+    ],
+    "cylinder_contrast_db": 10.583839217464263,
+    "cylinder_cnr": 1.2321984039785954,
+    "speckle_snr": 1.8322235484663556,
+    "brightness_40_over_10_mm_db": -17.156993391204104
+   }
+  },
+  {
+   "name": "v10",
+   "change": "three lateral pixels per element, beamformed (not interpolated afterwards)",
+   "sha256": "7356070799493893944ccd521d96fde3443d5b723e1829cbfa5f0de525b74646",
+   "shape": [
+    708,
+    574
+   ],
+   "against_parent": null,
+   "phantom": {
+    "lateral_spacing_mm": 5.99777101979502,
+    "lateral_scale_percent": -0.03714967008300318,
+    "depth_wire_spacing_mm": 19.111266745408937,
+    "depth_scale_percent": -4.443666272955316,
+    "near_depth_step_mm": 0.9285387798786365,
+    "depth_offset_mm": 0.72469207520447,
+    "wire_width_lateral_mm": [
+     1.1267757614968754,
+     1.0751954131480856,
+     1.1148821274589114
+    ],
+    "wire_width_axial_mm": [
+     0.41893198167200324,
+     0.4340363297325798,
+     0.4368445216000494
+    ],
+    "cylinder_contrast_db": 10.427968124485927,
+    "cylinder_cnr": 1.2190573234439983,
+    "speckle_snr": 1.8340861176514571,
+    "brightness_40_over_10_mm_db": -17.15642978832517
+   }
+  }
+ ]
+}
