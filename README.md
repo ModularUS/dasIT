@@ -13,7 +13,9 @@ This program is free software and licensed under the Apache License v2.0 - see t
 
 
 # Beamforming from explicit inputs
-`dasIT.beamform.Beamformer` is a delay-and-sum core that takes everything it needs as arguments in SI units. It exists beside the classes used in the notebook and does not change them.
+`dasIT.beamform.Beamformer` is a delay-and-sum core that takes everything it needs as arguments in SI units. The tutorial notebook `beamform_image.ipynb` is built on it and on `dasIT.geometry`, `dasIT.signal` and `dasIT.plot`.
+
+The classes of dasIT 1.0 (`dasIT.src`, `dasIT.features`, `dasIT.visualization`) are legacy. They are kept unchanged so that existing scripts keep running and are no longer used by the notebook. `tests/golden/LINEAGE.md` lists what the new chain corrects, one change at a time.
 ```python
 from dasIT.geometry import linear_array, plane_wave
 from dasIT.beamform import Beamformer
@@ -54,6 +56,6 @@ pip install git+https://github.com/ModularUS/dasIT          # as a package
 pip install -e .[test]                                      # from a checkout, for development
 pytest                                                      # compares every processing stage with the golden model
 ```
-The tests run the chain of `beamform_image.ipynb` on the bundled example data and compare each stage with the reference results in `tests/golden/` (see `tests/golden/README.md`). They also execute the code cells of the notebook itself.
+The tests compare the legacy chain on the bundled example data with the reference results in `tests/golden/` (see `tests/golden/README.md`), check the new core against synthetic point targets and the phantom, and execute the code cells of `beamform_image.ipynb`, which have to arrive at the newest golden frame.
 
 Tested with Python 3.10, NumPy 1.23, SciPy 1.10, pandas 1.5 (the versions dasIT 1.0 was written for) and with Python 3.12, NumPy 2.5, SciPy 1.18, pandas 3.1.
