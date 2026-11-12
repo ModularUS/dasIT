@@ -45,6 +45,8 @@ class apodization():
             self._window = 'blackman'
         elif self._apodization_type == 'hanning':
             self._window = 'hanning'
+        elif self._apodization_type == 'rec':
+            self._window = 'rec'
         else:
             print(r'ERROR MESSAGE: Selected aodization type does not exist. Choose either \textit{rec} or \textit{blackman}.')
         self._apo_table = self.__apodization()
@@ -119,6 +121,9 @@ class apodization():
             window = [np.hanning(w) for w in np.squeeze(sort)]
         elif self._window == 'blackman':
             window = [np.blackman(w) for w in np.squeeze(sort)]
+        elif self._window == 'rec':
+            # rectangular (box) window: every element inside the aperture counts fully
+            window = [np.ones(int(w)) for w in np.squeeze(sort)]
         else:
             print(r'ERROR MESSAGE: Wrong argument for window.')
         return window
