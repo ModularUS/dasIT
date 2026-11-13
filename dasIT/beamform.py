@@ -45,7 +45,7 @@ ENGINES = ('matrix', 'loop')
 
 class Beamformer():
     def __init__(self, element_x, grid_x, grid_z, fs, c, tx, t0=0.0, f_number=1.5, window='hann', interp='linear',
-                 engine='matrix', normalise=False, half_aperture=None, dtype=np.float64):
+                 engine='matrix', normalise=False, dtype=np.float64):
         """
         element_x      x of the receive elements [m], one per data channel (dasIT.geometry.linear_array)
         grid_x, grid_z pixel coordinates [m], any spacing
@@ -57,7 +57,6 @@ class Beamformer():
         interp         'nearest' sample, or 'linear' between the two samples around the arrival time
         engine         'matrix' or 'loop'
         normalise      divide every pixel by the sum of its weights: brightness independent of the aperture size
-        half_aperture  half width of the aperture per depth [m], replaces the f_number rule when given
         dtype          np.float64, or np.float32 for less memory
         """
         for value, choices, name in ((window, WINDOWS, 'window'), (interp, INTERPOLATIONS, 'interp'), (engine, ENGINES, 'engine')):
@@ -73,10 +72,8 @@ class Beamformer():
         shots = list(tx) if isinstance(tx, (list, tuple)) else [tx]
         self.n_shots = len(shots)
         self._tx = [np.ascontiguousarray(np.broadcast_to(t(self.grid_x[None, :], self.grid_z[:, None], self.c), self.shape)) for t in shots]
-        if half_aperture is None:
-            spacing = np.median(np.diff(self.element_x)) if self.element_x.size > 1 else 0.0
-            half_aperture = np.maximum(self.grid_z / (2 * f_number), spacing / 2)
-        self._half_aperture = np.maximum(np.broadcast_to(half_aperture, self.grid_z.shape), 1e-12)
+        spacing = np.median(np.diff(self.element_x)) if self.element_x.size > 1 else 0.0
+        self._half_aperture = np.maximum(self.grid_z / (2 * f_number), max(spacing / 2, 1e-12))   # half width per depth [m]
         self._matrices = {}
 
     # ---- the physics: one receive element, the pixels at (x, z)

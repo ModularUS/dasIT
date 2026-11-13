@@ -6,10 +6,6 @@ Leitner, C. et al. (2020). Detection of Motor Endplates in Deep and Pennate Skel
 Ultrasound. in Proceedings of the 2020 IEEE International Ultrasonics Symposium (IUS), Las Vegas, USA.
 DOI: 10.1109/IUS46767.2020.9251756
 
-The dataflow using Transducer and Medium classes and the provision of variables using decorators was
-adapted from pybf under Apache License 2.0
-Copyright 2020 ETH Zurich, Sergei Vostrikov
-
 The "log-compression" was adapted from:
 C. L. Palmer and O. M. H. Rindal, "Wireless, Real-Time Plane-Wave Coherent Compounding on an iPhone: A
 Feasibility Study," in IEEE Transactions on Ultrasonics, Ferroelectrics, and Frequency Control, vol. 66,

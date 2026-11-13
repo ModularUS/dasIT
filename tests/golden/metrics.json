@@ -1,0 +1,28 @@
+{
+ "versions": {
+  "numpy": "2.5.4",
+  "scipy": "1.18.1"
+ },
+ "phantom": {
+  "lateral_spacing_mm": 6.001104033710195,
+  "lateral_scale_percent": 0.018400561836595664,
+  "depth_wire_spacing_mm": 19.107152670299374,
+  "depth_scale_percent": -4.464236648503128,
+  "near_depth_step_mm": 0.9364086455322101,
+  "depth_offset_mm": 1.1677444940301018,
+  "wire_width_lateral_mm": [
+   0.9811849958215054,
+   1.0115442554318925,
+   1.0955144810543467
+  ],
+  "wire_width_axial_mm": [
+   0.40048687938239197,
+   0.4127553317063014,
+   0.42263323124391483
+  ],
+  "cylinder_contrast_db": 10.464550392510025,
+  "cylinder_cnr": 1.2308802321663164,
+  "speckle_snr": 1.8271986430379035,
+  "brightness_40_over_10_mm_db": -16.514762331954252
+ }
+}

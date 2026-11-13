@@ -7,15 +7,15 @@
 
 A wire is a peak along x. Before it is located, the median of every row over 8 mm is taken off: that removes what
 all columns of a row share, above all the echo of the probe surface, which is in the image as soon as the first
-samples of the record are kept (v11) and is 20 times brighter than the shallowest wire next to it.
+samples of the record are kept and is 20 times brighter than the shallowest wire next to it.
 
 measure() returns numbers that have a nominal value (scales, offsets), or a direction that is better (widths,
-contrast). They are tracked per golden generation in tests/golden/LINEAGE.md.
+contrast). The values of the reference frame are in tests/golden/metrics.json.
 """
 import numpy as np
 
-NEAR_WIRES_MM = [(-16, 1.5), (-10, 2.7), (-4, 3.7), (2, 4.6), (8, 5.4), (14, 6.4)]     # rough (x, z), read off the image
-DEPTH_WIRES_MM = [(14, 19.6), (14, 38.8)]
+NEAR_WIRES_MM = [(-16, 2.0), (-10, 3.2), (-4, 4.2), (2, 5.1), (8, 5.9), (14, 6.9)]     # rough (x, z), read off the image
+DEPTH_WIRES_MM = [(14, 20.1), (14, 39.3)]
 NOMINAL = dict(lateral_spacing_mm=6.0, depth_wire_spacing_mm=20.0, near_depth_step_mm=1.0, speckle_snr=1.91, cylinder_diameter_mm=8.0)
 
 
@@ -47,13 +47,11 @@ def _wire(env, x, z, guess, half=(1.6, 0.9), band=4.0):
     return cx, cz, _width(patch[kz], x[1] - x[0]), _width(patch[:, kx], z[1] - z[0])
 
 
-def measure(env, grid_x, grid_z, depth_shift_mm=0.0):
-    """env: envelope [depth, lateral]; grid_x, grid_z: pixel coordinates [m]. Returns a dict of the phantom metrics.
-    depth_shift_mm: how much deeper the whole image is drawn than in v1 (a later time zero); moves where the wires
-    are looked for, not what is measured."""
+def measure(env, grid_x, grid_z):
+    """env: envelope [depth, lateral]; grid_x, grid_z: pixel coordinates [m]. Returns a dict of the phantom metrics."""
     x, z = 1e3 * np.asarray(grid_x, float), 1e3 * np.asarray(grid_z, float)
-    near = np.array([_wire(env, x, z, (gx, gz + depth_shift_mm)) for gx, gz in NEAR_WIRES_MM])
-    deep = np.array([_wire(env, x, z, (gx, gz + depth_shift_mm)) for gx, gz in DEPTH_WIRES_MM])
+    near = np.array([_wire(env, x, z, g) for g in NEAR_WIRES_MM])
+    deep = np.array([_wire(env, x, z, g) for g in DEPTH_WIRES_MM])
     lateral_spacing = np.polyfit(np.arange(6), near[:, 0], 1)[0]
     depth_step, depth_offset = np.polyfit(np.arange(1, 7), near[:, 1], 1)
 

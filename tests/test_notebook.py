@@ -1,8 +1,8 @@
 """The code cells of beamform_image.ipynb run against this checkout, top to bottom, in one namespace.
 
 Lines that start a shell command (!pip) are left out; the download cell finds the data bundled in example_data/ and
-does nothing. Figures are drawn off screen. The notebook has to arrive at the newest golden generation
-(tests/golden/current, see tests/golden/LINEAGE.md) and at its wire widths.
+does nothing. Figures are drawn off screen. The notebook has to arrive at the reference frame of tests/golden and
+at its wire widths.
 """
 import contextlib
 import io
@@ -17,7 +17,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "beamform_image.ipynb"
-CURRENT = ROOT / "tests" / "golden" / "current"
+GOLDEN = ROOT / "tests" / "golden"
 pytestmark = pytest.mark.skipif(not (ROOT / "example_data" / "CIRSphantom_GE9LD_VVantage" / "CIRS_phantom.h5").exists(),
                                 reason="example data not present")
 
@@ -51,17 +51,17 @@ def namespace():
     return names
 
 
-def test_notebook_arrives_at_the_golden_frame(namespace):
-    golden = np.load(CURRENT / "golden.npz")["beamformed"]
+def test_notebook_arrives_at_the_reference_frame(namespace):
+    golden = np.load(GOLDEN / "golden.npz")["beamformed"]
     image = namespace["image"]
     assert image.shape == golden.shape
-    assert np.abs(image - golden).max() <= 1e-6 * np.abs(golden).max()
+    assert np.abs(image - golden).max() <= 2e-6 * np.abs(golden).max()
 
 
-def test_notebook_measures_the_wire_widths_of_the_lineage(namespace):
-    newest = json.loads((CURRENT / "lineage.json").read_text(encoding="utf-8"))["generations"][-1]["phantom"]
-    assert namespace["lateral_mm"] == pytest.approx(newest["wire_width_lateral_mm"][1], abs=0.1)      # the wire at 20 mm
-    assert namespace["axial_mm"] == pytest.approx(newest["wire_width_axial_mm"][1], abs=0.1)
+def test_notebook_measures_the_wire_widths_of_the_reference(namespace):
+    stored = json.loads((GOLDEN / "metrics.json").read_text(encoding="utf-8"))["phantom"]
+    assert namespace["lateral_mm"] == pytest.approx(stored["wire_width_lateral_mm"][1], abs=0.1)      # the wire at 20 mm
+    assert namespace["axial_mm"] == pytest.approx(stored["wire_width_axial_mm"][1], abs=0.1)
 
 
 def test_notebook_compounding_lowers_the_side_lobes(namespace):

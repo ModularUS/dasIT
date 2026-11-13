@@ -1,0 +1,27 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: oldest supported libraries
+            python: "3.10"
+            pins: "numpy==1.23.5 scipy==1.10.1"
+          - name: current libraries
+            python: "3.12"
+            pins: ""
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install ${{ matrix.pins }} -e .[test]
+      - run: pytest -q
