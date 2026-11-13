@@ -24,6 +24,22 @@ def test_bandpass_rejects_dc_and_keeps_the_band():
     assert np.corrcoef(out, tone(5.2e6)[500:-500, 0])[0, 1] > 0.999  # the in-band tone is kept, without a time shift
 
 
+def test_analytic_keeps_the_end_of_a_record_out_of_its_start():
+    """A burst that the end of the record cuts in half. Its envelope is known; nothing of it belongs to the first rows."""
+    fs, fc, n = 40e6, 5e6, 780
+    rows = np.arange(n)
+    true = np.exp(-0.5 * ((rows - (n - 1)) / 12) ** 2)
+    burst = true * np.cos(2 * np.pi * fc * rows / fs + 0.7)
+    env = ds.envelope(ds.analytic(burst[:, None]))[:, 0]
+    assert env[:48].max() < 1e-3                                    # without the zero continuation: 0.54
+    assert np.abs(env - true)[:600].max() < 2e-3                    # away from the cut the envelope is the true one;
+                                                                    # towards it the error grows, a cut burst has a long tail
+    inside = np.exp(-0.5 * ((rows - 400) / 12) ** 2)                # a burst inside the record is untouched by the padding
+    assert np.abs(ds.envelope(ds.analytic((inside * np.cos(2 * np.pi * fc * rows / fs))[:, None]))[:, 0] - inside).max() < 1e-6
+    frames = np.random.default_rng(0).standard_normal((64, 3, 2)).astype(np.float32)
+    assert ds.analytic(frames).shape == frames.shape and np.allclose(ds.analytic(frames).real, frames, atol=1e-6)
+
+
 def test_log_compress_range_and_reference():
     env = np.array([[1.0, 0.1], [0.0, 10.0]])
     db = ds.log_compress(env, 40)
@@ -34,6 +50,18 @@ def test_log_compress_range_and_reference():
 def test_log_compress_of_an_empty_frame_is_black():
     db = ds.log_compress(np.zeros((4, 3)), 55)                      # a frame that was not stored
     assert not np.isnan(db).any() and np.all(db == -55)
+
+
+def test_oversample_keeps_the_end_of_a_record_out_of_its_start():
+    fs, fc, n = 40e6, 5e6, 780
+    rows = np.arange(n)
+    burst = np.exp(-0.5 * ((rows - (n - 1)) / 12) ** 2) * np.cos(2 * np.pi * fc * rows / fs + 0.7)
+    fine = ds.oversample(burst[:, None], 4)[:, 0]
+    assert fine.shape == (4 * n,)
+    assert np.abs(fine[:4 * 48]).max() < 2e-3                       # without the zero continuation: 0.14
+    assert np.allclose(fine[::4], burst, atol=1e-9)
+    analytic_burst = ds.analytic(burst[:, None])                    # complex input, as in the example chain
+    assert np.allclose(ds.oversample(analytic_burst, 4)[::4], analytic_burst, atol=1e-9)
 
 
 def test_oversample_keeps_the_original_samples():

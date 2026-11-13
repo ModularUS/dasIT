@@ -1,5 +1,15 @@
 # Changes
 
+## 2.0.1
+
+`analytic` and `oversample` compute with an FFT, which treats a record as periodic. A signal at the end of a record
+therefore showed up at its start: a burst cut in half by the end of a 780-sample record put 54 % of its peak into
+the envelope of the first rows, and 14 % into the oversampled signal there. Both functions now continue the record
+with zeros by half its length on both sides and cut back afterwards (0.006 % and below 0.2 % in the same case).
+Signals inside a record are unchanged. The reference frame of the example changes by 0.2 % of its maximum in the
+top rows, where the echo of the transducer surface at the start of the record no longer leaks, and by less than
+0.01 % below row 100.
+
 ## 2.0.0
 
 dasIT 2.0 is a new implementation. The classes of dasIT 1.x (`dasIT.src`, `dasIT.features`, `dasIT.visualization`,

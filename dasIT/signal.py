@@ -11,6 +11,7 @@ axis 0. Units are SI; gains and image values are in dB where the name says so.
 '''
 
 import numpy as np
+from scipy import fft
 from scipy import signal as sps
 
 
@@ -21,15 +22,32 @@ def bandpass(rf, band, fs, order=4):
     return sps.sosfiltfilt(sos, rf, axis=0)
 
 
+def _zero_continued(rf):
+    """(record continued with zeros by half its length on both sides, index of its first sample in it).
+
+    analytic and oversample compute with an FFT, which treats a record as periodic: its last sample is the neighbour
+    of its first. Without the zeros, a signal at the end of a record shows up at its start."""
+    rf = np.asarray(rf)
+    n = rf.shape[0]
+    length = fft.next_fast_len(2 * n)
+    start = (length - n) // 2
+    padded = np.zeros((length,) + rf.shape[1:], dtype=np.result_type(rf.dtype, np.float32))
+    padded[start:start + n] = rf
+    return padded, start
+
+
 def analytic(rf):
     """Analytic signal along the time axis (Hilbert transform). Real part: the input. Magnitude: the envelope."""
-    return sps.hilbert(rf, axis=0)
+    padded, start = _zero_continued(rf)
+    return sps.hilbert(padded, axis=0)[start:start + np.shape(rf)[0]]
 
 
 def oversample(rf, factor):
     """Band-limited resampling of the time axis to factor times the sampling rate (the new rate is factor * fs).
     Makes linear interpolation between samples accurate when the record has few samples per period."""
-    return sps.resample(rf, rf.shape[0] * int(factor), axis=0)
+    factor = int(factor)
+    padded, start = _zero_continued(rf)
+    return sps.resample(padded, padded.shape[0] * factor, axis=0)[start * factor:(start + np.shape(rf)[0]) * factor]
 
 
 def envelope(x):

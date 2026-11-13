@@ -9,7 +9,7 @@ authors:
     orcid: "https://orcid.org/0000-0002-7058-7236"
 license: Apache-2.0
 repository-code: "https://github.com/ModularUS/dasIT"
-version: "2.0.0"
+version: "2.0.1"
 date-released: "2026-11-13"
 keywords:
   - ultrasound
