@@ -48,13 +48,33 @@ show_image(log_compress(envelope(analytic(lines)), 50), line_positions(x, lines.
 ```
 Channel data that were recorded one receive element per shot with the same plane wave (as the Ultrasonix `planewave_channels` sequence does) are case 1: the shots together form one `[samples, channels]` record.
 
+# A recording described by one dictionary
+The beamformer has to be told what the data are. `dasIT.description` puts all of it into one plain dictionary that an acquisition system writes beside its data (JSON, YAML, attributes of an h5 file):
+```python
+from dasIT import description as dd
+
+description = {
+    "element_x": x.tolist(), "fs": 20e6, "c": 1540.0,            # geometry and sampling
+    "transmits": [{"angle_deg": 0.0, "x0": x[0]}],                # one plane wave per shot, x0: where its clock starts
+    "t0": 0.0, "band_hz": [3e6, 7e6],                             # time of sample 0, band-pass before beamforming
+    "f_number": 1.5, "window": "box", "interp": "linear",
+    "first_frame": 1,                                             # frames before it are not to be used
+    "skip_samples": 0,                                            # start of the channels to blank, one number or one per channel
+}
+rf = dd.prepare(rf, description, silent=pickup)                   # silent reference off, start blanked, band-pass
+image = dd.beamformer(description, n_samples=rf.shape[0])(rf)
+image = dd.beamformer(description, n_samples=rf.shape[0], f_number=1.0)(rf)      # one setting changed, the rest kept
+text = dd.dumps(description)                                      # JSON; dd.loads(text) checks it again
+```
+Only `element_x`, `fs`, `c` and `transmits` are required. A missing or wrong key is refused with its name.
+
 # Install and test
 ```
 pip install git+https://github.com/ModularUS/dasIT          # as a package
 pip install -e .[test]                                      # from a checkout, for development
 pytest
 ```
-The tests check the beamformer against synthetic point targets with known positions (`tests/test_truth.py`), several transmits and scanner lines (`tests/test_shots.py`), the signal steps (`tests/test_signal.py`), the bundled phantom frame against a stored reference and the nominal values of the phantom (`tests/test_example.py`), and they execute the code cells of `beamform_image.ipynb`, which have to arrive at the same frame. They run on every push (`.github/workflows/tests.yml`).
+The tests check the beamformer against synthetic point targets with known positions (`tests/test_truth.py`), several transmits and scanner lines (`tests/test_shots.py`), the signal steps (`tests/test_signal.py`), the description (`tests/test_description.py`), the bundled phantom frame against a stored reference and the nominal values of the phantom (`tests/test_example.py`), and they execute the code cells of `beamform_image.ipynb`, which have to arrive at the same frame. They run on every push (`.github/workflows/tests.yml`).
 
 Tested with Python 3.10, NumPy 1.23, SciPy 1.10 and with Python 3.12, NumPy 2.5, SciPy 1.18.
 

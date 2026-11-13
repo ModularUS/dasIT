@@ -1,5 +1,12 @@
 # Changes
 
+## 2.1.0
+
+New module `dasIT.description`: a recording described by one dictionary (geometry, sampling, transmits, time of
+sample 0, band, aperture, first usable frame, start of the channels to blank). `prepare` applies the silent
+reference, the blanking and the band-pass, `beamformer` makes the `Beamformer`, with any key overridable for
+interactive use. `dumps` and `loads` store it as JSON. Nothing else changed.
+
 ## 2.0.1
 
 `analytic` and `oversample` compute with an FFT, which treats a record as periodic. A signal at the end of a record
