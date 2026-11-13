@@ -27,9 +27,9 @@ bf.delays(element=96)         # arrival sample of every pixel on one element, bf
 
 | case | matrix: build | matrix: apply | matrix size | loop: apply | loop: peak memory |
 |---|---|---|---|---|---|
-| 192 elements, 708 x 192 pixels | 1.4 s | 0.07 s | 117 MB | 1.2 s | 7 MB |
-| 128 elements, 780 x 128 pixels | 1.0 s | 0.04 s | 75 MB | 0.6 s | 6 MB |
-| 128 elements, 780 x 509 pixels | 4.1 s | 0.17 s | 301 MB | 2.7 s | 23 MB |
+| 192 elements, 708 x 192 pixels | 1.0 s | 0.05 s | 117 MB | 0.8 s | 7 MB |
+| 128 elements, 780 x 128 pixels | 0.8 s | 0.04 s | 75 MB | 0.4 s | 6 MB |
+| 128 elements, 780 x 509 pixels | 3.2 s | 0.13 s | 301 MB | 2.3 s | 23 MB |
 
 Three ways to use it:
 ```python
